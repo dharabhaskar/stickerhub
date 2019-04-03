@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">stickerhub</string>
+    <string name="sticker_header">Stickers</string>
 </resources>
