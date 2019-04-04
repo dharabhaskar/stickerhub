@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.tomlibo.stickerhub.adapter.StickerAdapter
+import com.tomlibo.stickerhub.listener.StickerClickListener
 import com.tomlibo.stickerhub.ui.GridSpacingItemDecoration
+import com.tomlibo.stickerhub.util.RecyclerItemClickListener
 import kotlinx.android.synthetic.main.fragment_sticker_gallery.*
 import java.util.*
 
@@ -27,12 +29,20 @@ class StickerGalleryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         //load all stickers
         addStickers()
 
         rcvSticker.layoutManager = GridLayoutManager(context, 3)
         rcvSticker.addItemDecoration(GridSpacingItemDecoration(3, 4, false))
         rcvSticker.adapter = StickerAdapter(requireContext(), stickerList)
+
+        rcvSticker.addOnItemTouchListener(RecyclerItemClickListener(context, object : RecyclerItemClickListener.OnItemClickListener {
+            override fun onItemClick(view: View, position: Int) {
+                var stickerClickListener = context as StickerClickListener
+                stickerClickListener.onSelectedSticker(stickerList.get(position))
+            }
+        }))
     }
 
     private fun addStickers() {
