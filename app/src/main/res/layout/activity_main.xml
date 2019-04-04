@@ -9,7 +9,8 @@
         android:id="@+id/flCanvas"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/btSticker" />
+        android:layout_above="@+id/btSticker"
+        android:background="@android:color/darker_gray" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btSticker"
