@@ -21,7 +21,7 @@ class StickerAdapter(private val context: Context, private val items: ArrayList<
     }
 
     override fun onBindViewHolder(holder: StickerViewHolder, position: Int) {
-        Picasso.get()
+        Picasso.with(context)
                 .load(items.get(position))
                 .into(holder.ivSticker)
     }

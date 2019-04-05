@@ -43,14 +43,14 @@ class MainActivity : AppCompatActivity(), StickerClickListener {
 
         flCanvas.removeView(stickerImageView)
 
-        Picasso.get()
+        Picasso.with(this)
                 .load(url)
                 .into(object : Target {
                     override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
                         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                     }
 
-                    override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
+                    override fun onBitmapFailed(errorDrawable: Drawable?) {
                         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                     }
 
