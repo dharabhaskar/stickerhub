@@ -26,7 +26,6 @@ class MainActivity : AppCompatActivity(), StickerClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        stickerImageView = StickerImageView(this)
         view = LayoutInflater.from(this).inflate(R.layout.item_sticker, null, false)
         ivSticker = view.ivSticker
 
@@ -41,7 +40,7 @@ class MainActivity : AppCompatActivity(), StickerClickListener {
     override fun onSelectedSticker(url: String) {
         stickerGalleryBottomSheet.dismiss()
 
-        flCanvas.removeView(stickerImageView)
+        //flCanvas.removeView(stickerImageView)
 
         Picasso.with(this)
                 .load(url)
@@ -56,6 +55,7 @@ class MainActivity : AppCompatActivity(), StickerClickListener {
 
                     override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
                         ivSticker.setImageBitmap(bitmap)
+                        stickerImageView = StickerImageView(this@MainActivity)
                         stickerImageView.setImageDrawable(ivSticker.drawable)
                         flCanvas.addView(stickerImageView)
                     }
