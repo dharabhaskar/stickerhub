@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.tomlibo.stickerhub.adapter.StickerAdapter
 import com.tomlibo.stickerhub.listener.StickerClickListener
-import com.tomlibo.stickerhub.ui.GridSpacingItemDecoration
+import com.tomlibo.stickerhub.uicomponent.GridSpacingItemDecoration
 import com.tomlibo.stickerhub.util.RecyclerItemClickListener
 import kotlinx.android.synthetic.main.fragment_sticker_gallery.*
 import java.util.*

@@ -1,4 +1,4 @@
-package com.tomlibo.stickerhub.ui;
+package com.tomlibo.stickerhub.uicomponent;
 
 import android.content.Context;
 import android.util.AttributeSet;

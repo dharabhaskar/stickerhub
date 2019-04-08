@@ -1,4 +1,4 @@
-package com.tomlibo.stickerhub.ui;
+package com.tomlibo.stickerhub.uicomponent;
 
 import android.graphics.Rect;
 import android.view.View;
