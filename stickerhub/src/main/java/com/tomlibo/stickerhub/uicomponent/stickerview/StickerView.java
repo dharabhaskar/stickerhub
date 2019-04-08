@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import com.tomlibo.android.v3.R;
+import com.tomlibo.stickerhub.R;
 
 public abstract class StickerView extends FrameLayout {
 
