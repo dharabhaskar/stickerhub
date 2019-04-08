@@ -35,9 +35,9 @@ public class StickerHolder extends FrameLayout {
     }
 
     private void init(Context context) {
-        mContext=context;
+        mContext = context;
         this.setTag("StickerHolder");
-        backgroundImageView=new ImageView(context);
+        backgroundImageView = new ImageView(context);
         backgroundImageView.setTag("iv_backImage");
 
         int margin = convertDpToPixel(PARAM_MARGIN, getContext()) / 2;
@@ -47,12 +47,12 @@ public class StickerHolder extends FrameLayout {
                         ViewGroup.LayoutParams.MATCH_PARENT
                 );
         iv_main_params.setMargins(margin, margin, margin, margin);
-        addView(backgroundImageView,iv_main_params);
+        addView(backgroundImageView, iv_main_params);
 
         setOnTouchListener(mOnTouchListener);
     }
 
-    private OnTouchListener mOnTouchListener=new OnTouchListener() {
+    private OnTouchListener mOnTouchListener = new OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent event) {
             if (view.getTag().equals("StickerHolder")) {
@@ -66,19 +66,19 @@ public class StickerHolder extends FrameLayout {
     };
 
     private void hideControlsOfAllChildStickerView() {
-        for(int i=0;i<getChildCount();i++){
-            View view=getChildAt(i);
-            if(view instanceof StickerView){
-                ((StickerView)view).hideControls();
+        for (int i = 0; i < getChildCount(); i++) {
+            View view = getChildAt(i);
+            if (view instanceof StickerView) {
+                ((StickerView) view).hideControls();
             }
         }
     }
 
-    public ImageView getBackgroundImageView(){
+    public ImageView getBackgroundImageView() {
         return backgroundImageView;
     }
 
-    public void addImageSticker(Bitmap bitmap){
+    public void addImageSticker(Bitmap bitmap) {
         StickerImageView stickerImageView = new StickerImageView(mContext);
         stickerImageView.setImageDrawable(new BitmapDrawable(getResources(), bitmap));
         addView(stickerImageView);
