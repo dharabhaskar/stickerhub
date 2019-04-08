@@ -65,7 +65,7 @@ public class StickerHolder extends FrameLayout {
         }
     };
 
-    private void hideControlsOfAllChildStickerView() {
+    public void hideControlsOfAllChildStickerView() {
         for (int i = 0; i < getChildCount(); i++) {
             View view = getChildAt(i);
             if (view instanceof StickerView) {
