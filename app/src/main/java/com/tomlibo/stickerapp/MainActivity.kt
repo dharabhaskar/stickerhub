@@ -3,38 +3,29 @@ package com.tomlibo.stickerapp
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatImageView
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
-import com.tomlibo.stickerapp.stickerview.StickerImageView
 import com.tomlibo.stickerhub.bottomsheet.StickerGalleryBottomSheet
 import com.tomlibo.stickerhub.listener.StickerClickListener
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.item_sticker.view.*
+
 
 class MainActivity : AppCompatActivity(), StickerClickListener {
 
     private val stickerGalleryBottomSheet = StickerGalleryBottomSheet()
-    private lateinit var stickerImageView: StickerImageView
-    private lateinit var view: View
-    private lateinit var ivSticker: AppCompatImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        view = LayoutInflater.from(this).inflate(R.layout.item_sticker, null, false)
-        ivSticker = view.ivSticker
-
         btSticker.setOnClickListener { v ->
-            /*val intent = Intent(this, StickerHomeActivity::class.java)
-            startActivity(intent)*/
-
             stickerGalleryBottomSheet.show(supportFragmentManager, StickerGalleryBottomSheet().tag)
         }
+
+        Picasso.with(this)
+                .load("https://cdn.pixabay.com/photo/2017/05/07/19/32/strawberry-2293337_960_720.jpg")
+                .into(flCanvas.backgroundImageView)
     }
 
     override fun onSelectedSticker(url: String) {
@@ -54,10 +45,7 @@ class MainActivity : AppCompatActivity(), StickerClickListener {
                     }
 
                     override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
-                        ivSticker.setImageBitmap(bitmap)
-                        stickerImageView = StickerImageView(this@MainActivity)
-                        stickerImageView.setImageDrawable(ivSticker.drawable)
-                        flCanvas.addView(stickerImageView)
+                        flCanvas.addImageSticker(bitmap)
                     }
 
                 })

@@ -18,6 +18,7 @@ import android.widget.ImageView;
 
 import com.tomlibo.stickerhub.R;
 
+
 public abstract class StickerView extends FrameLayout {
 
     public static final String TAG = StickerView.class.getSimpleName();
@@ -25,6 +26,8 @@ public abstract class StickerView extends FrameLayout {
     private ImageView iv_scale;
     private ImageView iv_delete;
     private ImageView iv_flip;
+
+    private boolean isControlVisible;
 
     // For scalling
     private float this_orgX = -1, this_orgY = -1;
@@ -154,11 +157,29 @@ public abstract class StickerView extends FrameLayout {
 
     protected abstract View getMainView();
 
+    private void changeControlVisibility(boolean visible){
+        iv_scale.setVisibility(visible?VISIBLE:GONE);
+        iv_delete.setVisibility(visible?VISIBLE:GONE);
+        iv_flip.setVisibility(visible?VISIBLE:GONE);
+        iv_border.setVisibility(visible?VISIBLE:GONE);
+    }
+
+    public void hideControls(){
+        changeControlVisibility(false);
+    }
+
+    public void showControls(){
+        changeControlVisibility(true);
+    }
+
     private OnTouchListener mTouchListener = new OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent event) {
 
             if (view.getTag().equals("DraggableViewGroup")) {
+                if(!isControlVisible){
+                    showControls();
+                }
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         Log.v(TAG, "sticker view action down");
@@ -305,20 +326,6 @@ public abstract class StickerView extends FrameLayout {
         return pos;
     }
 
-    public void setControlItemsHidden(boolean isHidden) {
-        if (isHidden) {
-            iv_border.setVisibility(View.INVISIBLE);
-            iv_scale.setVisibility(View.INVISIBLE);
-            iv_delete.setVisibility(View.INVISIBLE);
-            iv_flip.setVisibility(View.INVISIBLE);
-        } else {
-            iv_border.setVisibility(View.VISIBLE);
-            iv_scale.setVisibility(View.VISIBLE);
-            iv_delete.setVisibility(View.VISIBLE);
-            iv_flip.setVisibility(View.VISIBLE);
-        }
-    }
-
     protected View getImageViewFlip() {
         return iv_flip;
     }
@@ -373,18 +380,4 @@ public abstract class StickerView extends FrameLayout {
         return (int) px;
     }
 
-    public void setControlsVisibility(boolean isVisible) {
-        if (!isVisible) {
-            iv_border.setVisibility(View.GONE);
-            iv_delete.setVisibility(View.GONE);
-            iv_flip.setVisibility(View.GONE);
-            iv_scale.setVisibility(View.GONE);
-        } else {
-            iv_border.setVisibility(View.VISIBLE);
-            iv_delete.setVisibility(View.VISIBLE);
-            iv_flip.setVisibility(View.VISIBLE);
-            iv_scale.setVisibility(View.VISIBLE);
-        }
-
-    }
 }
