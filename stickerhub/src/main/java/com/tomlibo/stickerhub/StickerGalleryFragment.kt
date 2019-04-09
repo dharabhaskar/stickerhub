@@ -16,6 +16,7 @@ import java.util.*
 class StickerGalleryFragment : Fragment() {
 
     private val stickerList: ArrayList<String> = ArrayList()
+    private var stickerClickListener:StickerClickListener?=null
 
     companion object {
         fun newInstance(): StickerGalleryFragment {
@@ -39,10 +40,16 @@ class StickerGalleryFragment : Fragment() {
 
         rcvSticker.addOnItemTouchListener(RecyclerItemClickListener(context, object : RecyclerItemClickListener.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
-                var stickerClickListener = context as StickerClickListener
-                stickerClickListener.onSelectedSticker(stickerList.get(position))
+                if(context is StickerClickListener){
+                    stickerClickListener=context as StickerClickListener
+                }
+                stickerClickListener?.onSelectedSticker(stickerList[position])
             }
         }))
+    }
+
+    fun setStickerClickListener(stickerClickListener: StickerClickListener){
+        this.stickerClickListener=stickerClickListener
     }
 
     private fun addStickers() {
