@@ -48,7 +48,7 @@ class StickerGalleryFragment : Fragment() {
         }))
     }
 
-    fun setStickerClickListener(stickerClickListener: StickerClickListener){
+    fun setStickerClickListener(stickerClickListener: StickerClickListener?){
         this.stickerClickListener=stickerClickListener
     }
 

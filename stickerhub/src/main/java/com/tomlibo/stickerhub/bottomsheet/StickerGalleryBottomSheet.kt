@@ -7,8 +7,10 @@ import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.tomlibo.stickerhub.R
 import com.tomlibo.stickerhub.StickerGalleryFragment
+import com.tomlibo.stickerhub.listener.StickerClickListener
 
 class StickerGalleryBottomSheet : BottomSheetDialogFragment() {
+    private var stickerClickListener:StickerClickListener?=null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.bottom_sheet_stickers, container, false)
@@ -17,10 +19,17 @@ class StickerGalleryBottomSheet : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        var fragment = StickerGalleryFragment.newInstance()
+        fragment.setStickerClickListener(stickerClickListener)
+
         // add sticker gallery fragment
         childFragmentManager
                 .beginTransaction()
-                .add(R.id.container, StickerGalleryFragment.newInstance(), StickerGalleryFragment().tag)
+                .add(R.id.container,fragment , StickerGalleryFragment().tag)
                 .commit()
+    }
+
+    fun setStickerClickListener(stickerClickListener: StickerClickListener){
+        this.stickerClickListener=stickerClickListener
     }
 }

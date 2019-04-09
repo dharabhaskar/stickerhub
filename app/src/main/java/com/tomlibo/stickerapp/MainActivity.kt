@@ -26,6 +26,8 @@ class MainActivity : AppCompatActivity(), StickerClickListener {
         Picasso.with(this)
                 .load("https://cdn.pixabay.com/photo/2017/05/07/19/32/strawberry-2293337_960_720.jpg")
                 .into(flCanvas.backgroundImageView)
+
+        stickerGalleryBottomSheet.setStickerClickListener(this)
     }
 
     override fun onSelectedSticker(url: String) {
