@@ -26,6 +26,7 @@ public abstract class StickerView extends FrameLayout {
     private ImageView iv_scale;
     private ImageView iv_delete;
     private ImageView iv_flip;
+    private ImageView iv_text_editor;
 
     private boolean isControlVisible;
 
@@ -42,7 +43,6 @@ public abstract class StickerView extends FrameLayout {
 
     private final static int BUTTON_SIZE_DP = 30;
     private final static int SELF_SIZE_DP = 100;
-
 
     public StickerView(Context context) {
         super(context);
@@ -64,16 +64,19 @@ public abstract class StickerView extends FrameLayout {
         this.iv_scale = new ImageView(context);
         this.iv_delete = new ImageView(context);
         this.iv_flip = new ImageView(context);
+        this.iv_text_editor = new ImageView(context);
 
         this.iv_scale.setImageResource(R.drawable.ic_expand);
         this.iv_delete.setImageResource(R.drawable.ic_cross);
         this.iv_flip.setImageResource(R.drawable.ic_flip);
+        this.iv_text_editor.setImageResource(R.drawable.ic_text_editor);
 
         this.setTag("DraggableViewGroup");
         this.iv_border.setTag("iv_border");
         this.iv_scale.setTag("iv_scale");
         this.iv_delete.setTag("iv_delete");
         this.iv_flip.setTag("iv_flip");
+        this.iv_text_editor.setTag("iv_text_editor");
 
         int margin = convertDpToPixel(BUTTON_SIZE_DP, getContext()) / 2;
         int size = convertDpToPixel(SELF_SIZE_DP, getContext());
@@ -120,12 +123,20 @@ public abstract class StickerView extends FrameLayout {
                 );
         iv_flip_params.gravity = Gravity.TOP | Gravity.LEFT;
 
+        LayoutParams iv_text_editor_params =
+                new LayoutParams(
+                        convertDpToPixel(BUTTON_SIZE_DP, getContext()),
+                        convertDpToPixel(BUTTON_SIZE_DP, getContext())
+                );
+        iv_text_editor_params.gravity = Gravity.BOTTOM | Gravity.LEFT;
+
         this.setLayoutParams(this_params);
         this.addView(getMainView(), iv_main_params);
         this.addView(iv_border, iv_border_params);
         this.addView(iv_scale, iv_scale_params);
         this.addView(iv_delete, iv_delete_params);
         this.addView(iv_flip, iv_flip_params);
+        this.addView(iv_text_editor, iv_text_editor_params);
         this.setOnTouchListener(mTouchListener);
         this.iv_scale.setOnTouchListener(mTouchListener);
         this.iv_delete.setOnClickListener(new OnClickListener() {
@@ -157,18 +168,29 @@ public abstract class StickerView extends FrameLayout {
 
     protected abstract View getMainView();
 
-    private void changeControlVisibility(boolean visible){
-        iv_scale.setVisibility(visible?VISIBLE:GONE);
-        iv_delete.setVisibility(visible?VISIBLE:GONE);
-        iv_flip.setVisibility(visible?VISIBLE:GONE);
-        iv_border.setVisibility(visible?VISIBLE:GONE);
+    private void changeControlVisibility(boolean visible) {
+        iv_scale.setVisibility(visible ? VISIBLE : GONE);
+        iv_delete.setVisibility(visible ? VISIBLE : GONE);
+
+        if (visible) {
+            if (this instanceof StickerImageView) {
+                iv_flip.setVisibility(visible ? VISIBLE : GONE);
+            } else if (this instanceof StickerTextView) {
+                iv_text_editor.setVisibility(visible ? VISIBLE : GONE);
+            }
+        } else {
+            iv_flip.setVisibility(GONE);
+            iv_text_editor.setVisibility(GONE);
+        }
+
+        iv_border.setVisibility(visible ? VISIBLE : GONE);
     }
 
-    public void hideControls(){
+    public void hideControls() {
         changeControlVisibility(false);
     }
 
-    public void showControls(){
+    public void showControls() {
         changeControlVisibility(true);
     }
 
@@ -177,7 +199,7 @@ public abstract class StickerView extends FrameLayout {
         public boolean onTouch(View view, MotionEvent event) {
 
             if (view.getTag().equals("DraggableViewGroup")) {
-                if(!isControlVisible){
+                if (!isControlVisible) {
                     showControls();
                 }
                 switch (event.getAction()) {
@@ -330,6 +352,10 @@ public abstract class StickerView extends FrameLayout {
         return iv_flip;
     }
 
+    protected View getImageViewTextEditor() {
+        return iv_text_editor;
+    }
+
     protected void onScaling(boolean scaleUp) {
     }
 
@@ -379,5 +405,4 @@ public abstract class StickerView extends FrameLayout {
         float px = dp * (metrics.densityDpi / 160f);
         return (int) px;
     }
-
 }

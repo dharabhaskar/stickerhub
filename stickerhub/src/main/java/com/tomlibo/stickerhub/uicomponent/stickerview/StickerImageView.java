@@ -41,6 +41,10 @@ public class StickerImageView extends StickerView {
             this.iv_main = new AppCompatImageView(getContext());
             this.iv_main.setScaleType(ImageView.ScaleType.FIT_XY);
         }
+
+        if (getImageViewTextEditor() != null)
+            getImageViewTextEditor().setVisibility(View.GONE);
+
         return iv_main;
     }
 

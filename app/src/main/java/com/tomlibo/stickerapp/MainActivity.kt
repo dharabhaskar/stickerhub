@@ -19,21 +19,24 @@ class MainActivity : AppCompatActivity(), StickerClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // load background image
+        Picasso.with(this)
+                .load("https://cdn.pixabay.com/photo/2017/05/07/19/32/strawberry-2293337_960_720.jpg")
+                .into(flCanvas.backgroundImageView)
+
         btSticker.setOnClickListener { v ->
             stickerGalleryBottomSheet.show(supportFragmentManager, StickerGalleryBottomSheet().tag)
         }
 
-        Picasso.with(this)
-                .load("https://cdn.pixabay.com/photo/2017/05/07/19/32/strawberry-2293337_960_720.jpg")
-                .into(flCanvas.backgroundImageView)
+        btText.setOnClickListener { v ->
+            flCanvas.addTextSticker()
+        }
 
         stickerGalleryBottomSheet.setStickerClickListener(this)
     }
 
     override fun onSelectedSticker(url: String) {
         stickerGalleryBottomSheet.dismiss()
-
-        //flCanvas.removeView(stickerImageView)
 
         Picasso.with(this)
                 .load(url)
@@ -49,7 +52,6 @@ class MainActivity : AppCompatActivity(), StickerClickListener {
                     override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
                         flCanvas.addImageSticker(bitmap)
                     }
-
                 })
     }
 }

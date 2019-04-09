@@ -12,6 +12,7 @@ import com.tomlibo.stickerhub.uicomponent.stickerview.util.AutoResizeTextView;
 
 public class StickerTextView extends StickerView {
     private AutoResizeTextView tv_main;
+    private TextStickerClickListener mTextStickerClickListener;
 
     public StickerTextView(Context context) {
         super(context);
@@ -45,6 +46,16 @@ public class StickerTextView extends StickerView {
         tv_main.setLayoutParams(params);
         if (getImageViewFlip() != null)
             getImageViewFlip().setVisibility(View.GONE);
+
+        if (getImageViewTextEditor() != null) {
+            getImageViewTextEditor().setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mTextStickerClickListener.onTextEditorClicked(tv_main.getText().toString());
+                }
+            });
+        }
+
         return tv_main;
     }
 
@@ -68,5 +79,13 @@ public class StickerTextView extends StickerView {
     @Override
     protected void onScaling(boolean scaleUp) {
         super.onScaling(scaleUp);
+    }
+
+    public void setTextStickerClickListener(TextStickerClickListener textStickerClickListener) {
+        this.mTextStickerClickListener = textStickerClickListener;
+    }
+
+    public interface TextStickerClickListener {
+        void onTextEditorClicked(String text);
     }
 }

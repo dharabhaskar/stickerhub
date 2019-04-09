@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layoutTextEditor"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white_transparent"
+    android:orientation="horizontal"
+    android:paddingStart="8dp"
+    android:paddingTop="16dp"
+    android:paddingEnd="8dp"
+    android:paddingBottom="16dp"
+    android:visibility="gone">
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/etTextEditor"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@color/black_transparent"
+        android:hint="Type your text here..."
+        android:padding="8dp"
+        android:singleLine="true"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white_transparent" />
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/btDone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="8dp"
+        android:background="?android:selectableItemBackgroundBorderless"
+        android:padding="4dp"
+        android:src="@drawable/ic_done" />
+
+</LinearLayout>

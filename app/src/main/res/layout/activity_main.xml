@@ -9,16 +9,34 @@
         android:id="@+id/flCanvas"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/btSticker"
+        android:layout_above="@+id/llBottom"
         android:background="@android:color/darker_gray" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btSticker"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/llBottom"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="8dp"
-        android:text="Sticker" />
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:weightSum="2">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btSticker"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Sticker" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/colorPrimary"
+            android:text="Text" />
+
+    </LinearLayout>
 
 </RelativeLayout>
