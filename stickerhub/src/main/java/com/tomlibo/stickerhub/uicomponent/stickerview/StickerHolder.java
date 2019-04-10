@@ -136,11 +136,10 @@ public class StickerHolder extends FrameLayout {
         stickerTextView.setText("Your Text");
         addView(stickerTextView);
 
-        currentStickerTextView = stickerTextView;
-
         stickerTextView.setTextStickerClickListener(new StickerTextView.TextStickerClickListener() {
             @Override
-            public void onTextEditorClicked(String text) {
+            public void onTextEditorClicked(View view, String text) {
+                currentStickerTextView = (StickerTextView) view;
                 textEditorControlVisibility(true);
                 etTextEditor.setText(text);
                 etTextEditor.setSelection(etTextEditor.getText().length());

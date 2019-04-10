@@ -51,7 +51,7 @@ public class StickerTextView extends StickerView {
             getImageViewTextEditor().setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mTextStickerClickListener.onTextEditorClicked(tv_main.getText().toString());
+                    mTextStickerClickListener.onTextEditorClicked(StickerTextView.this, tv_main.getText().toString());
                 }
             });
         }
@@ -86,6 +86,6 @@ public class StickerTextView extends StickerView {
     }
 
     public interface TextStickerClickListener {
-        void onTextEditorClicked(String text);
+        void onTextEditorClicked(View view, String text);
     }
 }
