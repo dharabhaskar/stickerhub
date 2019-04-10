@@ -44,6 +44,8 @@ public abstract class StickerView extends FrameLayout {
     private final static int BUTTON_SIZE_DP = 30;
     private final static int SELF_SIZE_DP = 100;
 
+    private StickerDeleteListener mStickerDeleteListener;
+
     public StickerView(Context context) {
         super(context);
         init(context);
@@ -145,6 +147,8 @@ public abstract class StickerView extends FrameLayout {
                 if (StickerView.this.getParent() != null) {
                     ViewGroup myCanvas = ((ViewGroup) StickerView.this.getParent());
                     myCanvas.removeView(StickerView.this);
+
+                    mStickerDeleteListener.onStickerRemoved();
                 }
             }
         });
@@ -408,5 +412,13 @@ public abstract class StickerView extends FrameLayout {
         DisplayMetrics metrics = resources.getDisplayMetrics();
         float px = dp * (metrics.densityDpi / 160f);
         return (int) px;
+    }
+
+    public void setStickerDeleteListener(StickerDeleteListener stickerDeleteListener) {
+        this.mStickerDeleteListener = stickerDeleteListener;
+    }
+
+    public interface StickerDeleteListener {
+        void onStickerRemoved();
     }
 }

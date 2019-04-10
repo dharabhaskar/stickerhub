@@ -1,11 +1,13 @@
 package com.tomlibo.stickerhub.uicomponent.stickerview;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
-import android.text.TextUtils;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -16,10 +18,11 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.tomlibo.stickerhub.R;
-import com.tomlibo.stickerhub.util.Utils;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatImageButton;
@@ -35,6 +38,8 @@ public class StickerHolder extends FrameLayout {
     private AppCompatEditText etTextEditor;
     private AppCompatImageButton btDone;
     private StickerTextView currentStickerTextView;
+    private Timer timer;
+    private final long DELAY = 1000;
 
     public StickerHolder(Context context) {
         super(context);
@@ -84,17 +89,44 @@ public class StickerHolder extends FrameLayout {
         view_textEditor_params.gravity = Gravity.BOTTOM;
         addView(viewTextEditor, view_textEditor_params);
 
+        timer = new Timer();
+
         setOnTouchListener(mOnTouchListener);
+
+        etTextEditor.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (timer != null) {
+                    timer.cancel();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(final Editable s) {
+                timer = new Timer();
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        ((Activity) mContext).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                currentStickerTextView.setText(String.valueOf(s));
+                            }
+                        });
+                    }
+                }, DELAY);
+            }
+        });
 
         btDone.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!TextUtils.isEmpty(etTextEditor.getText().toString().trim())) {
-                    textEditorControlVisibility(false);
-                    currentStickerTextView.setText(etTextEditor.getText().toString().trim());
-                } else {
-                    Toast.makeText(mContext, "Enter your text", Toast.LENGTH_LONG).show();
-                }
+                textEditorControlVisibility(false);
             }
         });
     }
@@ -119,6 +151,8 @@ public class StickerHolder extends FrameLayout {
                 ((StickerView) view).hideControls();
             }
         }
+
+        textEditorControlVisibility(false);
     }
 
     public ImageView getBackgroundImageView() {
@@ -126,12 +160,16 @@ public class StickerHolder extends FrameLayout {
     }
 
     public void addImageSticker(Bitmap bitmap) {
+        hideControlsOfAllChildStickerView();
+
         StickerImageView stickerImageView = new StickerImageView(mContext);
         stickerImageView.setImageDrawable(new BitmapDrawable(getResources(), bitmap));
         addView(stickerImageView);
     }
 
     public void addTextSticker() {
+        hideControlsOfAllChildStickerView();
+
         StickerTextView stickerTextView = new StickerTextView(mContext);
         stickerTextView.setText("Your Text");
         addView(stickerTextView);
@@ -144,9 +182,13 @@ public class StickerHolder extends FrameLayout {
                 etTextEditor.setText(text);
                 etTextEditor.setSelection(etTextEditor.getText().length());
                 etTextEditor.requestFocus();
+            }
+        });
 
-                // hide soft keyboard
-                Utils.hideSoftKeyboard(mContext);
+        stickerTextView.setStickerDeleteListener(new StickerView.StickerDeleteListener() {
+            @Override
+            public void onStickerRemoved() {
+                textEditorControlVisibility(false);
             }
         });
     }
