@@ -67,10 +67,11 @@ public class StickerHolder extends FrameLayout {
         int margin = convertDpToPixel(PARAM_MARGIN, getContext()) / 2;
         LayoutParams iv_main_params =
                 new LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
                 );
         iv_main_params.setMargins(margin, margin, margin, margin);
+        iv_main_params.gravity = Gravity.CENTER;
         addView(backgroundImageView, iv_main_params);
 
         // add text editor view layout
