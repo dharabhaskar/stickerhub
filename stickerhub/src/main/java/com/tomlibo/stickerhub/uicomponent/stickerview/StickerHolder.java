@@ -63,14 +63,13 @@ public class StickerHolder extends FrameLayout {
         // add background image view
         backgroundImageView = new AppCompatImageView(context);
         backgroundImageView.setTag("iv_backImage");
+        backgroundImageView.setAdjustViewBounds(true);
 
-        int margin = convertDpToPixel(PARAM_MARGIN, getContext()) / 2;
         LayoutParams iv_main_params =
                 new LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT
                 );
-        iv_main_params.setMargins(margin, margin, margin, margin);
         iv_main_params.gravity = Gravity.CENTER;
         addView(backgroundImageView, iv_main_params);
 
