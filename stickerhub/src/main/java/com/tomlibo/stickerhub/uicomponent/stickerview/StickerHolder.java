@@ -86,7 +86,7 @@ public class StickerHolder extends FrameLayout {
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT
                 );
-        view_textEditor_params.gravity = Gravity.BOTTOM;
+        view_textEditor_params.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
         addView(viewTextEditor, view_textEditor_params);
 
         timer = new Timer();
