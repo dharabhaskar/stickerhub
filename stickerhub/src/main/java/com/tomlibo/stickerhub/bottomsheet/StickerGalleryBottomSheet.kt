@@ -10,7 +10,8 @@ import com.tomlibo.stickerhub.StickerGalleryFragment
 import com.tomlibo.stickerhub.listener.StickerClickListener
 
 class StickerGalleryBottomSheet : BottomSheetDialogFragment() {
-    private var stickerClickListener:StickerClickListener?=null
+
+    private var stickerClickListener: StickerClickListener? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.bottom_sheet_stickers, container, false)
@@ -25,11 +26,11 @@ class StickerGalleryBottomSheet : BottomSheetDialogFragment() {
         // add sticker gallery fragment
         childFragmentManager
                 .beginTransaction()
-                .add(R.id.container,fragment , StickerGalleryFragment().tag)
+                .add(R.id.container, fragment, StickerGalleryFragment().tag)
                 .commit()
     }
 
-    fun setStickerClickListener(stickerClickListener: StickerClickListener){
-        this.stickerClickListener=stickerClickListener
+    fun setStickerClickListener(stickerClickListener: StickerClickListener) {
+        this.stickerClickListener = stickerClickListener
     }
 }

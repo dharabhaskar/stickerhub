@@ -205,8 +205,8 @@ public abstract class StickerView extends FrameLayout {
             if (view.getTag().equals("DraggableViewGroup")) {
                 if (!isControlVisible) {
                     ViewGroup myCanvas = ((ViewGroup) StickerView.this.getParent());
-                    if(myCanvas instanceof StickerHolder){
-                        ((StickerHolder)myCanvas).hideControlsOfAllChildStickerView();
+                    if (myCanvas instanceof StickerHolder) {
+                        ((StickerHolder) myCanvas).hideControlsOfAllChildStickerView();
                     }
                     showControls();
                 }
