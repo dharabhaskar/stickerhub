@@ -10,7 +10,6 @@ import com.tomlibo.stickerhub.bottomsheet.StickerGalleryBottomSheet
 import com.tomlibo.stickerhub.listener.StickerClickListener
 import kotlinx.android.synthetic.main.activity_main.*
 
-
 class MainActivity : AppCompatActivity(), StickerClickListener {
 
     private val stickerGalleryBottomSheet = StickerGalleryBottomSheet()
@@ -22,14 +21,14 @@ class MainActivity : AppCompatActivity(), StickerClickListener {
         // load background image
         Picasso.with(this)
                 .load("https://cdn.pixabay.com/photo/2017/05/07/19/32/strawberry-2293337_960_720.jpg")
-                .into(flCanvas.backgroundImageView)
+                .into(stickerHolder.backgroundImageView)
 
         btSticker.setOnClickListener { v ->
             stickerGalleryBottomSheet.show(supportFragmentManager, StickerGalleryBottomSheet().tag)
         }
 
         btText.setOnClickListener { v ->
-            flCanvas.addTextSticker()
+            stickerHolder.addTextSticker()
         }
 
         stickerGalleryBottomSheet.setStickerClickListener(this)
@@ -50,7 +49,7 @@ class MainActivity : AppCompatActivity(), StickerClickListener {
                     }
 
                     override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
-                        flCanvas.addImageSticker(bitmap)
+                        stickerHolder.addImageSticker(bitmap)
                     }
                 })
     }

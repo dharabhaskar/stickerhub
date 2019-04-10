@@ -32,6 +32,7 @@ public class StickerHolder extends FrameLayout {
     private static final float PARAM_MARGIN = 16;
     private final String TAG = getClass().getSimpleName();
     private Context mContext;
+    private FrameLayout canvasView;
     private AppCompatImageView backgroundImageView;
     private View viewTextEditor;
     private LinearLayout layoutTextEditor;
@@ -60,6 +61,18 @@ public class StickerHolder extends FrameLayout {
         mContext = context;
         this.setTag("StickerHolder");
 
+        // add canvas view
+        canvasView = new FrameLayout(context);
+        canvasView.setTag("fl_canvasView");
+
+        LayoutParams fl_canvasView_params =
+                new LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                );
+        fl_canvasView_params.gravity = Gravity.CENTER;
+        addView(canvasView, fl_canvasView_params);
+
         // add background image view
         backgroundImageView = new AppCompatImageView(context);
         backgroundImageView.setTag("iv_backImage");
@@ -70,8 +83,7 @@ public class StickerHolder extends FrameLayout {
                         ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT
                 );
-        iv_main_params.gravity = Gravity.CENTER;
-        addView(backgroundImageView, iv_main_params);
+        canvasView.addView(backgroundImageView, iv_main_params);
 
         // add text editor view layout
         viewTextEditor = LayoutInflater.from(mContext).inflate(R.layout.layout_text_editor, this, false);
@@ -164,7 +176,7 @@ public class StickerHolder extends FrameLayout {
 
         StickerImageView stickerImageView = new StickerImageView(mContext);
         stickerImageView.setImageDrawable(new BitmapDrawable(getResources(), bitmap));
-        addView(stickerImageView);
+        canvasView.addView(stickerImageView);
     }
 
     public void addTextSticker() {
@@ -172,7 +184,7 @@ public class StickerHolder extends FrameLayout {
 
         StickerTextView stickerTextView = new StickerTextView(mContext);
         stickerTextView.setText("Your Text");
-        addView(stickerTextView);
+        canvasView.addView(stickerTextView);
 
         stickerTextView.setTextStickerClickListener(new StickerTextView.TextStickerClickListener() {
             @Override

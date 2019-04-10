@@ -6,7 +6,7 @@
     tools:context=".MainActivity">
 
     <com.tomlibo.stickerhub.uicomponent.stickerview.StickerHolder
-        android:id="@+id/flCanvas"
+        android:id="@+id/stickerHolder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/llBottom"
