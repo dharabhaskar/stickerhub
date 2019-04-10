@@ -167,6 +167,10 @@ public class StickerHolder extends FrameLayout {
         textEditorControlVisibility(false);
     }
 
+    public FrameLayout getCanvasView() {
+        return canvasView;
+    }
+
     public ImageView getBackgroundImageView() {
         return backgroundImageView;
     }
