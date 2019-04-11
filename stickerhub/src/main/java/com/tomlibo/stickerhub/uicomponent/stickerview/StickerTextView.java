@@ -11,6 +11,7 @@ import android.widget.FrameLayout;
 import com.tomlibo.stickerhub.uicomponent.stickerview.util.AutoResizeTextView;
 
 public class StickerTextView extends StickerView {
+
     private AutoResizeTextView tv_main;
     private TextStickerClickListener mTextStickerClickListener;
 

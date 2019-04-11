@@ -1,17 +1,13 @@
 package com.tomlibo.stickerhub.uicomponent.stickerview;
 
-import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,9 +15,10 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
+import android.widget.RelativeLayout;
 
 import com.tomlibo.stickerhub.R;
+import com.tomlibo.stickerhub.util.Utils;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -31,17 +28,18 @@ import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.appcompat.widget.AppCompatImageView;
 
 public class StickerHolder extends FrameLayout {
-    private static final float PARAM_MARGIN = 16;
-    private static final long DELAY = 1000;
+
     private final String TAG = getClass().getSimpleName();
+    private static final long DELAY = 1000;
     private Context mContext;
-    private AppCompatImageView backgroundImageView;
     private View rootView;
+    private RelativeLayout layoutMainView;
+    private FrameLayout innerStickerHolder;
+    private AppCompatImageView backgroundImageView;
     private LinearLayout layoutTextEditor;
     private AppCompatEditText etTextEditor;
     private AppCompatImageButton btDone;
     private StickerTextView currentStickerTextView;
-    private FrameLayout innerStickerHolder;
     private Timer timer;
 
     public StickerHolder(Context context) {
@@ -61,6 +59,7 @@ public class StickerHolder extends FrameLayout {
 
     private void init(Context context) {
         mContext = context;
+
         //Inflate component layout
         rootView = LayoutInflater.from(mContext).inflate(R.layout.layout_sticker_holder, this, false);
         rootView.setTag("rootView");
@@ -70,28 +69,25 @@ public class StickerHolder extends FrameLayout {
                         ViewGroup.LayoutParams.MATCH_PARENT
                 );
         addView(rootView, root_params);
-        innerStickerHolder = findViewById(R.id.ll_innerView);
-        innerStickerHolder.setTag("StickerHolder");
 
+        // ui component initialize
+        layoutMainView = findViewById(R.id.layout_mainView);
+        innerStickerHolder = findViewById(R.id.layout_innerView);
         backgroundImageView = findViewById(R.id.iv_background);
-
-
-        // add text editor view layout
         layoutTextEditor = findViewById(R.id.layoutTextEditor);
         etTextEditor = findViewById(R.id.etTextEditor);
         btDone = findViewById(R.id.btDone);
+
+        innerStickerHolder.setTag("StickerHolder");
+        innerStickerHolder.setOnTouchListener(mOnTouchListener);
+
         btDone.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!TextUtils.isEmpty(etTextEditor.getText().toString().trim())) {
-                    textEditorControlVisibility(false);
-                    currentStickerTextView.setText(etTextEditor.getText().toString().trim());
-                } else {
-                    Toast.makeText(mContext, "Enter your text", Toast.LENGTH_LONG).show();
-                }
+                textEditorControlVisibility(false);
+                currentStickerTextView.setText(etTextEditor.getText().toString().trim());
             }
         });
-        innerStickerHolder.setOnTouchListener(mOnTouchListener);
 
         etTextEditor.addTextChangedListener(new TextWatcher() {
             @Override
@@ -150,6 +146,10 @@ public class StickerHolder extends FrameLayout {
         return backgroundImageView;
     }
 
+    public Bitmap getFinalBitmap() {
+        return Utils.getBitmapFromView(layoutMainView);
+    }
+
     public void addImageSticker(Bitmap bitmap) {
         StickerImageView stickerImageView = new StickerImageView(mContext);
         stickerImageView.setImageDrawable(new BitmapDrawable(getResources(), bitmap));
@@ -169,18 +169,15 @@ public class StickerHolder extends FrameLayout {
                 etTextEditor.setText(text);
                 etTextEditor.setSelection(etTextEditor.getText().length());
                 etTextEditor.requestFocus();
-
-                // hide soft keyboard
-                //Utils.hideSoftKeyboard(mContext);
             }
         });
-    }
 
-    private static int convertDpToPixel(float dp, Context context) {
-        Resources resources = context.getResources();
-        DisplayMetrics metrics = resources.getDisplayMetrics();
-        float px = dp * (metrics.densityDpi / 160f);
-        return (int) px;
+        stickerTextView.setStickerDeleteListener(new StickerView.StickerDeleteListener() {
+            @Override
+            public void onStickerRemoved() {
+                textEditorControlVisibility(false);
+            }
+        });
     }
 
     @Override

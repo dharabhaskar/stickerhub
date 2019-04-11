@@ -148,7 +148,8 @@ public abstract class StickerView extends FrameLayout {
                     ViewGroup myCanvas = ((ViewGroup) StickerView.this.getParent());
                     myCanvas.removeView(StickerView.this);
 
-                    mStickerDeleteListener.onStickerRemoved();
+                    if (mStickerDeleteListener != null)
+                        mStickerDeleteListener.onStickerRemoved();
                 }
             }
         });
