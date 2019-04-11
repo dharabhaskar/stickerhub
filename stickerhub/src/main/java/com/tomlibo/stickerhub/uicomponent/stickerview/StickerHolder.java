@@ -2,14 +2,12 @@ package com.tomlibo.stickerhub.uicomponent.stickerview;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -32,9 +30,7 @@ public class StickerHolder extends FrameLayout {
     private static final float PARAM_MARGIN = 16;
     private final String TAG = getClass().getSimpleName();
     private Context mContext;
-    private FrameLayout canvasView;
     private AppCompatImageView backgroundImageView;
-    private View viewTextEditor;
     private LinearLayout layoutTextEditor;
     private AppCompatEditText etTextEditor;
     private AppCompatImageButton btDone;
@@ -61,18 +57,6 @@ public class StickerHolder extends FrameLayout {
         mContext = context;
         this.setTag("StickerHolder");
 
-        // add canvas view
-        canvasView = new FrameLayout(context);
-        canvasView.setTag("fl_canvasView");
-
-        LayoutParams fl_canvasView_params =
-                new LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT
-                );
-        fl_canvasView_params.gravity = Gravity.CENTER;
-        addView(canvasView, fl_canvasView_params);
-
         // add background image view
         backgroundImageView = new AppCompatImageView(context);
         backgroundImageView.setTag("iv_backImage");
@@ -83,10 +67,11 @@ public class StickerHolder extends FrameLayout {
                         ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT
                 );
-        canvasView.addView(backgroundImageView, iv_main_params);
+        iv_main_params.gravity = Gravity.CENTER;
+        addView(backgroundImageView, iv_main_params);
 
         // add text editor view layout
-        viewTextEditor = LayoutInflater.from(mContext).inflate(R.layout.layout_text_editor, this, false);
+        View viewTextEditor = LayoutInflater.from(mContext).inflate(R.layout.layout_text_editor, this, false);
         viewTextEditor.setTag("viewTextEditor");
 
         layoutTextEditor = viewTextEditor.findViewById(R.id.layoutTextEditor);
@@ -167,10 +152,6 @@ public class StickerHolder extends FrameLayout {
         textEditorControlVisibility(false);
     }
 
-    public FrameLayout getCanvasView() {
-        return canvasView;
-    }
-
     public ImageView getBackgroundImageView() {
         return backgroundImageView;
     }
@@ -180,7 +161,7 @@ public class StickerHolder extends FrameLayout {
 
         StickerImageView stickerImageView = new StickerImageView(mContext);
         stickerImageView.setImageDrawable(new BitmapDrawable(getResources(), bitmap));
-        canvasView.addView(stickerImageView);
+        addView(stickerImageView);
     }
 
     public void addTextSticker() {
@@ -188,7 +169,7 @@ public class StickerHolder extends FrameLayout {
 
         StickerTextView stickerTextView = new StickerTextView(mContext);
         stickerTextView.setText("Your Text");
-        canvasView.addView(stickerTextView);
+        addView(stickerTextView);
 
         stickerTextView.setTextStickerClickListener(new StickerTextView.TextStickerClickListener() {
             @Override
@@ -207,13 +188,6 @@ public class StickerHolder extends FrameLayout {
                 textEditorControlVisibility(false);
             }
         });
-    }
-
-    private static int convertDpToPixel(float dp, Context context) {
-        Resources resources = context.getResources();
-        DisplayMetrics metrics = resources.getDisplayMetrics();
-        float px = dp * (metrics.densityDpi / 160f);
-        return (int) px;
     }
 
     @Override
