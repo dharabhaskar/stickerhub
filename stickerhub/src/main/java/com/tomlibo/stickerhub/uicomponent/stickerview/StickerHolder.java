@@ -30,7 +30,6 @@ import androidx.appcompat.widget.AppCompatImageView;
 public class StickerHolder extends FrameLayout {
 
     private final String TAG = getClass().getSimpleName();
-    private static final long DELAY = 1000;
     private Context mContext;
     private View rootView;
     private RelativeLayout layoutMainView;
@@ -41,6 +40,7 @@ public class StickerHolder extends FrameLayout {
     private AppCompatImageButton btDone;
     private StickerTextView currentStickerTextView;
     private Timer timer;
+    private static final long DELAY = 1000;
 
     public StickerHolder(Context context) {
         super(context);
@@ -151,12 +151,16 @@ public class StickerHolder extends FrameLayout {
     }
 
     public void addImageSticker(Bitmap bitmap) {
+        hideControlsOfAllChildStickerView();
+
         StickerImageView stickerImageView = new StickerImageView(mContext);
         stickerImageView.setImageDrawable(new BitmapDrawable(getResources(), bitmap));
         innerStickerHolder.addView(stickerImageView);
     }
 
     public void addTextSticker() {
+        hideControlsOfAllChildStickerView();
+
         StickerTextView stickerTextView = new StickerTextView(mContext);
         stickerTextView.setText("Your Text");
         innerStickerHolder.addView(stickerTextView);

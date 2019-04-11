@@ -18,7 +18,6 @@ import android.widget.ImageView;
 
 import com.tomlibo.stickerhub.R;
 
-
 public abstract class StickerView extends FrameLayout {
 
     public static final String TAG = StickerView.class.getSimpleName();
