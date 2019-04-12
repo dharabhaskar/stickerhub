@@ -140,6 +140,8 @@ public class StickerHolder extends FrameLayout {
                 ((StickerView) view).hideControls();
             }
         }
+
+        textEditorControlVisibility(false);
     }
 
     public ImageView getBackgroundImageView() {
