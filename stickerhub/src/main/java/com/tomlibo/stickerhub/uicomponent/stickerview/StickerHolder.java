@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.tomlibo.stickerhub.R;
+import com.tomlibo.stickerhub.uicomponent.colorpicker.ColorPickerPopup;
 import com.tomlibo.stickerhub.util.Utils;
 
 import java.util.Timer;
@@ -169,6 +170,12 @@ public class StickerHolder extends FrameLayout {
 
         stickerTextView.setTextStickerClickListener(new StickerTextView.TextStickerClickListener() {
             @Override
+            public void onColorPaletteClicked(View view) {
+                currentStickerTextView = (StickerTextView) view;
+                textColorPicker();
+            }
+
+            @Override
             public void onTextEditorClicked(View view, String text) {
                 currentStickerTextView = (StickerTextView) view;
                 textEditorControlVisibility(true);
@@ -193,5 +200,23 @@ public class StickerHolder extends FrameLayout {
 
     public void textEditorControlVisibility(boolean visible) {
         layoutTextEditor.setVisibility(visible ? VISIBLE : GONE);
+    }
+
+    private void textColorPicker() {
+        new ColorPickerPopup.Builder(mContext)
+                .initialColor(currentStickerTextView.getTextColor()) // Set initial color
+                .enableBrightness(true) // Enable brightness slider or not
+                .enableAlpha(false) // Enable alpha slider or not
+                .okTitle("SELECT")
+                .cancelTitle("CANCEL")
+                .showIndicator(true)
+                .showValue(false)
+                .build()
+                .show(rootView, new ColorPickerPopup.ColorPickerObserver() {
+                    @Override
+                    public void onColorPicked(String color) {
+                        currentStickerTextView.setTextColor(color);
+                    }
+                });
     }
 }

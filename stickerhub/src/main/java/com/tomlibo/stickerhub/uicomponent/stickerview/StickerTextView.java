@@ -45,8 +45,18 @@ public class StickerTextView extends StickerView {
         );
         params.gravity = Gravity.CENTER;
         tv_main.setLayoutParams(params);
+
         if (getImageViewFlip() != null)
             getImageViewFlip().setVisibility(View.GONE);
+
+        if (getColorPalette() != null) {
+            getColorPalette().setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mTextStickerClickListener.onColorPaletteClicked(StickerTextView.this);
+                }
+            });
+        }
 
         if (getImageViewTextEditor() != null) {
             getImageViewTextEditor().setOnClickListener(new OnClickListener() {
@@ -72,6 +82,18 @@ public class StickerTextView extends StickerView {
         return null;
     }
 
+    public void setTextColor(String colorCode) {
+        if (tv_main != null)
+            tv_main.setTextColor(Color.parseColor(colorCode));
+    }
+
+    public int getTextColor() {
+        if (tv_main != null)
+            return tv_main.getCurrentTextColor();
+
+        return 0;
+    }
+
     public static float pixelsToSp(Context context, float px) {
         float scaledDensity = context.getResources().getDisplayMetrics().scaledDensity;
         return px / scaledDensity;
@@ -87,6 +109,8 @@ public class StickerTextView extends StickerView {
     }
 
     public interface TextStickerClickListener {
+        void onColorPaletteClicked(View view);
+
         void onTextEditorClicked(View view, String text);
     }
 }

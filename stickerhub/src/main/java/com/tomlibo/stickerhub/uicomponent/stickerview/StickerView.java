@@ -25,6 +25,7 @@ public abstract class StickerView extends FrameLayout {
     private ImageView iv_scale;
     private ImageView iv_delete;
     private ImageView iv_flip;
+    private ImageView iv_color_palette;
     private ImageView iv_text_editor;
 
     private boolean isControlVisible;
@@ -65,11 +66,13 @@ public abstract class StickerView extends FrameLayout {
         this.iv_scale = new ImageView(context);
         this.iv_delete = new ImageView(context);
         this.iv_flip = new ImageView(context);
+        this.iv_color_palette = new ImageView(context);
         this.iv_text_editor = new ImageView(context);
 
         this.iv_scale.setImageResource(R.drawable.ic_expand);
         this.iv_delete.setImageResource(R.drawable.ic_cross);
         this.iv_flip.setImageResource(R.drawable.ic_flip);
+        this.iv_color_palette.setImageResource(R.drawable.ic_color_palette);
         this.iv_text_editor.setImageResource(R.drawable.ic_text_editor);
 
         this.setTag("DraggableViewGroup");
@@ -77,6 +80,7 @@ public abstract class StickerView extends FrameLayout {
         this.iv_scale.setTag("iv_scale");
         this.iv_delete.setTag("iv_delete");
         this.iv_flip.setTag("iv_flip");
+        this.iv_color_palette.setTag("iv_color_palette");
         this.iv_text_editor.setTag("iv_text_editor");
 
         int margin = convertDpToPixel(BUTTON_SIZE_DP, getContext()) / 2;
@@ -124,6 +128,13 @@ public abstract class StickerView extends FrameLayout {
                 );
         iv_flip_params.gravity = Gravity.TOP | Gravity.LEFT;
 
+        LayoutParams iv_color_palette_params =
+                new LayoutParams(
+                        convertDpToPixel(BUTTON_SIZE_DP, getContext()),
+                        convertDpToPixel(BUTTON_SIZE_DP, getContext())
+                );
+        iv_color_palette_params.gravity = Gravity.TOP | Gravity.LEFT;
+
         LayoutParams iv_text_editor_params =
                 new LayoutParams(
                         convertDpToPixel(BUTTON_SIZE_DP, getContext()),
@@ -137,7 +148,9 @@ public abstract class StickerView extends FrameLayout {
         this.addView(iv_scale, iv_scale_params);
         this.addView(iv_delete, iv_delete_params);
         this.addView(iv_flip, iv_flip_params);
+        this.addView(iv_color_palette, iv_color_palette_params);
         this.addView(iv_text_editor, iv_text_editor_params);
+
         this.setOnTouchListener(mTouchListener);
         this.iv_scale.setOnTouchListener(mTouchListener);
         this.iv_delete.setOnClickListener(new OnClickListener() {
@@ -173,21 +186,25 @@ public abstract class StickerView extends FrameLayout {
     protected abstract View getMainView();
 
     private void changeControlVisibility(boolean visible) {
+        iv_border.setVisibility(visible ? VISIBLE : GONE);
         iv_scale.setVisibility(visible ? VISIBLE : GONE);
         iv_delete.setVisibility(visible ? VISIBLE : GONE);
 
         if (visible) {
             if (this instanceof StickerImageView) {
-                iv_flip.setVisibility(visible ? VISIBLE : GONE);
+                iv_flip.setVisibility(VISIBLE);
+                iv_color_palette.setVisibility(GONE);
+                iv_text_editor.setVisibility(GONE);
             } else if (this instanceof StickerTextView) {
-                iv_text_editor.setVisibility(visible ? VISIBLE : GONE);
+                iv_flip.setVisibility(GONE);
+                iv_color_palette.setVisibility(VISIBLE);
+                iv_text_editor.setVisibility(VISIBLE);
             }
         } else {
             iv_flip.setVisibility(GONE);
+            iv_color_palette.setVisibility(GONE);
             iv_text_editor.setVisibility(GONE);
         }
-
-        iv_border.setVisibility(visible ? VISIBLE : GONE);
     }
 
     public void hideControls() {
@@ -358,6 +375,10 @@ public abstract class StickerView extends FrameLayout {
 
     protected View getImageViewFlip() {
         return iv_flip;
+    }
+
+    protected View getColorPalette() {
+        return iv_color_palette;
     }
 
     protected View getImageViewTextEditor() {
