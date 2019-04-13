@@ -19,15 +19,15 @@ public class CheckerboardDrawable extends Drawable {
     private int colorOdd;
     private int colorEven;
 
-    public static CheckerboardDrawable create() {
-        return new CheckerboardDrawable(new Builder());
-    }
-
     private CheckerboardDrawable(Builder builder) {
         this.size = builder.size;
         this.colorOdd = builder.colorOdd;
         this.colorEven = builder.colorEven;
         configurePaint();
+    }
+
+    public static CheckerboardDrawable create() {
+        return new CheckerboardDrawable(new Builder());
     }
 
     private void configurePaint() {

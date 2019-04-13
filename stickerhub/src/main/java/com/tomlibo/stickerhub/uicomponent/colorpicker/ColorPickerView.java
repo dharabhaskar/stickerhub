@@ -16,14 +16,13 @@ import androidx.annotation.Nullable;
 
 public class ColorPickerView extends LinearLayout implements ColorObservable {
 
+    List<ColorObserver> observers = new ArrayList<>();
     private ColorWheelView colorWheelView;
     private BrightnessSliderView brightnessSliderView;
     private AlphaSliderView alphaSliderView;
     private ColorObservable observableOnDuty;
     private boolean onlyUpdateOnTouchEventUp;
-
     private int initialColor = Color.BLACK;
-
     private int sliderMargin;
     private int sliderHeight;
 
@@ -195,8 +194,6 @@ public class ColorPickerView extends LinearLayout implements ColorObservable {
     public void reset() {
         colorWheelView.setColor(initialColor, true);
     }
-
-    List<ColorObserver> observers = new ArrayList<>();
 
     @Override
     public void subscribe(ColorObserver observer) {

@@ -12,13 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
 
-    private OnItemClickListener mListener;
-
-    public interface OnItemClickListener {
-        void onItemClick(View view, int position);
-    }
-
     GestureDetector mGestureDetector;
+    private OnItemClickListener mListener;
 
     public RecyclerItemClickListener(Context context, OnItemClickListener listener) {
         mListener = listener;
@@ -47,5 +42,9 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
     @Override
     public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
 
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
     }
 }

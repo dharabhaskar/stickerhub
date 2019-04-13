@@ -3,11 +3,4 @@
     package="com.tomlibo.stickerhub">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
-    <application>
-        <activity
-            android:name=".StickerHomeActivity"
-            android:screenOrientation="portrait" />
-    </application>
-
 </manifest>

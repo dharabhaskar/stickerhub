@@ -112,6 +112,14 @@ public class ColorPickerDialog {
         }
     }
 
+    private String colorHex(int color) {
+        int a = Color.alpha(color);
+        int r = Color.red(color);
+        int g = Color.green(color);
+        int b = Color.blue(color);
+        return String.format(Locale.getDefault(), "0x%02X%02X%02X%02X", a, r, g, b);
+    }
+
     public static class Builder {
 
         private Context context;
@@ -172,14 +180,6 @@ public class ColorPickerDialog {
         public ColorPickerDialog build() {
             return new ColorPickerDialog(this);
         }
-    }
-
-    private String colorHex(int color) {
-        int a = Color.alpha(color);
-        int r = Color.red(color);
-        int g = Color.green(color);
-        int b = Color.blue(color);
-        return String.format(Locale.getDefault(), "0x%02X%02X%02X%02X", a, r, g, b);
     }
 
     public abstract static class ColorPickerObserver implements ColorObserver {

@@ -21,15 +21,14 @@ import com.tomlibo.stickerhub.R;
 public abstract class StickerView extends FrameLayout {
 
     public static final String TAG = StickerView.class.getSimpleName();
+    private final static int BUTTON_SIZE_DP = 30;
+    private final static int SELF_SIZE_DP = 100;
     private BorderView iv_border;
     private ImageView iv_scale;
     private ImageView iv_delete;
     private ImageView iv_flip;
     private ImageView iv_color_palette;
     private ImageView iv_text_editor;
-
-    private boolean isControlVisible;
-
     // For scalling
     private float this_orgX = -1, this_orgY = -1;
     private float scale_orgX = -1, scale_orgY = -1;
@@ -38,195 +37,19 @@ public abstract class StickerView extends FrameLayout {
     private float rotate_orgX = -1, rotate_orgY = -1, rotate_newX = -1, rotate_newY = -1;
     // For moving
     private float move_orgX = -1, move_orgY = -1;
-
     private double centerX, centerY;
-
-    private final static int BUTTON_SIZE_DP = 30;
-    private final static int SELF_SIZE_DP = 100;
-
     private StickerDeleteListener mStickerDeleteListener;
-
-    public StickerView(Context context) {
-        super(context);
-        init(context);
-    }
-
-    public StickerView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init(context);
-    }
-
-    public StickerView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-        init(context);
-    }
-
-    private void init(Context context) {
-        this.iv_border = new BorderView(context);
-        this.iv_scale = new ImageView(context);
-        this.iv_delete = new ImageView(context);
-        this.iv_flip = new ImageView(context);
-        this.iv_color_palette = new ImageView(context);
-        this.iv_text_editor = new ImageView(context);
-
-        this.iv_scale.setImageResource(R.drawable.ic_expand);
-        this.iv_delete.setImageResource(R.drawable.ic_cross);
-        this.iv_flip.setImageResource(R.drawable.ic_flip);
-        this.iv_color_palette.setImageResource(R.drawable.ic_color_palette);
-        this.iv_text_editor.setImageResource(R.drawable.ic_text_editor);
-
-        this.setTag("DraggableViewGroup");
-        this.iv_border.setTag("iv_border");
-        this.iv_scale.setTag("iv_scale");
-        this.iv_delete.setTag("iv_delete");
-        this.iv_flip.setTag("iv_flip");
-        this.iv_color_palette.setTag("iv_color_palette");
-        this.iv_text_editor.setTag("iv_text_editor");
-
-        int margin = convertDpToPixel(BUTTON_SIZE_DP, getContext()) / 2;
-        int size = convertDpToPixel(SELF_SIZE_DP, getContext());
-
-        LayoutParams this_params =
-                new LayoutParams(
-                        size,
-                        size
-                );
-        this_params.gravity = Gravity.CENTER;
-
-        LayoutParams iv_main_params =
-                new LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT
-                );
-        iv_main_params.setMargins(margin, margin, margin, margin);
-
-        LayoutParams iv_border_params =
-                new LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT
-                );
-        iv_border_params.setMargins(margin, margin, margin, margin);
-
-        LayoutParams iv_scale_params =
-                new LayoutParams(
-                        convertDpToPixel(BUTTON_SIZE_DP, getContext()),
-                        convertDpToPixel(BUTTON_SIZE_DP, getContext())
-                );
-        iv_scale_params.gravity = Gravity.BOTTOM | Gravity.RIGHT;
-
-        LayoutParams iv_delete_params =
-                new LayoutParams(
-                        convertDpToPixel(BUTTON_SIZE_DP, getContext()),
-                        convertDpToPixel(BUTTON_SIZE_DP, getContext())
-                );
-        iv_delete_params.gravity = Gravity.TOP | Gravity.RIGHT;
-
-        LayoutParams iv_flip_params =
-                new LayoutParams(
-                        convertDpToPixel(BUTTON_SIZE_DP, getContext()),
-                        convertDpToPixel(BUTTON_SIZE_DP, getContext())
-                );
-        iv_flip_params.gravity = Gravity.TOP | Gravity.LEFT;
-
-        LayoutParams iv_color_palette_params =
-                new LayoutParams(
-                        convertDpToPixel(BUTTON_SIZE_DP, getContext()),
-                        convertDpToPixel(BUTTON_SIZE_DP, getContext())
-                );
-        iv_color_palette_params.gravity = Gravity.TOP | Gravity.LEFT;
-
-        LayoutParams iv_text_editor_params =
-                new LayoutParams(
-                        convertDpToPixel(BUTTON_SIZE_DP, getContext()),
-                        convertDpToPixel(BUTTON_SIZE_DP, getContext())
-                );
-        iv_text_editor_params.gravity = Gravity.BOTTOM | Gravity.LEFT;
-
-        this.setLayoutParams(this_params);
-        this.addView(getMainView(), iv_main_params);
-        this.addView(iv_border, iv_border_params);
-        this.addView(iv_scale, iv_scale_params);
-        this.addView(iv_delete, iv_delete_params);
-        this.addView(iv_flip, iv_flip_params);
-        this.addView(iv_color_palette, iv_color_palette_params);
-        this.addView(iv_text_editor, iv_text_editor_params);
-
-        this.setOnTouchListener(mTouchListener);
-        this.iv_scale.setOnTouchListener(mTouchListener);
-        this.iv_delete.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (StickerView.this.getParent() != null) {
-                    ViewGroup myCanvas = ((ViewGroup) StickerView.this.getParent());
-                    myCanvas.removeView(StickerView.this);
-
-                    if (mStickerDeleteListener != null)
-                        mStickerDeleteListener.onStickerRemoved();
-                }
-            }
-        });
-        this.iv_flip.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                Log.v(TAG, "flip the view");
-
-                View mainView = getMainView();
-                mainView.setRotationY(mainView.getRotationY() == -180f ? 0f : -180f);
-                mainView.invalidate();
-                requestLayout();
-            }
-        });
-    }
-
-    public boolean isFlip() {
-        return getMainView().getRotationY() == -180f;
-    }
-
-    protected abstract View getMainView();
-
-    private void changeControlVisibility(boolean visible) {
-        iv_border.setVisibility(visible ? VISIBLE : GONE);
-        iv_scale.setVisibility(visible ? VISIBLE : GONE);
-        iv_delete.setVisibility(visible ? VISIBLE : GONE);
-
-        if (visible) {
-            if (this instanceof StickerImageView) {
-                iv_flip.setVisibility(VISIBLE);
-                iv_color_palette.setVisibility(GONE);
-                iv_text_editor.setVisibility(GONE);
-            } else if (this instanceof StickerTextView) {
-                iv_flip.setVisibility(GONE);
-                iv_color_palette.setVisibility(VISIBLE);
-                iv_text_editor.setVisibility(VISIBLE);
-            }
-        } else {
-            iv_flip.setVisibility(GONE);
-            iv_color_palette.setVisibility(GONE);
-            iv_text_editor.setVisibility(GONE);
-        }
-    }
-
-    public void hideControls() {
-        changeControlVisibility(false);
-    }
-
-    public void showControls() {
-        changeControlVisibility(true);
-    }
-
     private OnTouchListener mTouchListener = new OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent event) {
 
             if (view.getTag().equals("DraggableViewGroup")) {
-                if (!isControlVisible) {
-                    ViewGroup myCanvas = ((ViewGroup) StickerView.this.getParent().getParent().getParent().getParent().getParent().getParent());
-                    if (myCanvas instanceof StickerHolder) {
-                        ((StickerHolder) myCanvas).hideControlsOfAllChildStickerView();
-                    }
-                    showControls();
+                ViewGroup myCanvas = ((ViewGroup) StickerView.this.getParent().getParent().getParent().getParent().getParent().getParent());
+                if (myCanvas instanceof StickerHolder) {
+                    ((StickerHolder) myCanvas).hideControlsOfAllChildStickerView();
                 }
+                showControls();
+
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         Log.v(TAG, "sticker view action down");
@@ -352,6 +175,192 @@ public abstract class StickerView extends FrameLayout {
         }
     };
 
+    public StickerView(Context context) {
+        super(context);
+        init(context);
+    }
+
+    public StickerView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init(context);
+    }
+
+    public StickerView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        init(context);
+    }
+
+    private static int convertDpToPixel(float dp, Context context) {
+        Resources resources = context.getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        float px = dp * (metrics.densityDpi / 160f);
+        return (int) px;
+    }
+
+    private void init(Context context) {
+        this.iv_border = new BorderView(context);
+        this.iv_scale = new ImageView(context);
+        this.iv_delete = new ImageView(context);
+        this.iv_flip = new ImageView(context);
+        this.iv_color_palette = new ImageView(context);
+        this.iv_text_editor = new ImageView(context);
+
+        this.iv_scale.setImageResource(R.drawable.ic_expand);
+        this.iv_delete.setImageResource(R.drawable.ic_cross);
+        this.iv_flip.setImageResource(R.drawable.ic_flip);
+        this.iv_color_palette.setImageResource(R.drawable.ic_color_palette);
+        this.iv_text_editor.setImageResource(R.drawable.ic_text_editor);
+
+        this.setTag("DraggableViewGroup");
+        this.iv_border.setTag("iv_border");
+        this.iv_scale.setTag("iv_scale");
+        this.iv_delete.setTag("iv_delete");
+        this.iv_flip.setTag("iv_flip");
+        this.iv_color_palette.setTag("iv_color_palette");
+        this.iv_text_editor.setTag("iv_text_editor");
+
+        int margin = convertDpToPixel(BUTTON_SIZE_DP, getContext()) / 2;
+        int size = convertDpToPixel(SELF_SIZE_DP, getContext());
+
+        if (this instanceof StickerFrameView) {
+            margin = 0;
+            size = ViewGroup.LayoutParams.MATCH_PARENT;
+        }
+
+        LayoutParams this_params =
+                new LayoutParams(
+                        size,
+                        size
+                );
+        this_params.gravity = Gravity.CENTER;
+
+        LayoutParams iv_main_params =
+                new LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT
+                );
+        iv_main_params.setMargins(margin, margin, margin, margin);
+
+        LayoutParams iv_border_params =
+                new LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT
+                );
+        iv_border_params.setMargins(margin, margin, margin, margin);
+
+        LayoutParams iv_scale_params =
+                new LayoutParams(
+                        convertDpToPixel(BUTTON_SIZE_DP, getContext()),
+                        convertDpToPixel(BUTTON_SIZE_DP, getContext())
+                );
+        iv_scale_params.gravity = Gravity.BOTTOM | Gravity.RIGHT;
+
+        LayoutParams iv_delete_params =
+                new LayoutParams(
+                        convertDpToPixel(BUTTON_SIZE_DP, getContext()),
+                        convertDpToPixel(BUTTON_SIZE_DP, getContext())
+                );
+        iv_delete_params.gravity = Gravity.TOP | Gravity.RIGHT;
+
+        LayoutParams iv_flip_params =
+                new LayoutParams(
+                        convertDpToPixel(BUTTON_SIZE_DP, getContext()),
+                        convertDpToPixel(BUTTON_SIZE_DP, getContext())
+                );
+        iv_flip_params.gravity = Gravity.TOP | Gravity.LEFT;
+
+        LayoutParams iv_color_palette_params =
+                new LayoutParams(
+                        convertDpToPixel(BUTTON_SIZE_DP, getContext()),
+                        convertDpToPixel(BUTTON_SIZE_DP, getContext())
+                );
+        iv_color_palette_params.gravity = Gravity.TOP | Gravity.LEFT;
+
+        LayoutParams iv_text_editor_params =
+                new LayoutParams(
+                        convertDpToPixel(BUTTON_SIZE_DP, getContext()),
+                        convertDpToPixel(BUTTON_SIZE_DP, getContext())
+                );
+        iv_text_editor_params.gravity = Gravity.BOTTOM | Gravity.LEFT;
+
+        this.setLayoutParams(this_params);
+        this.addView(getMainView(), iv_main_params);
+
+        this.addView(iv_delete, iv_delete_params);
+
+        if (!(this instanceof StickerFrameView)) {
+            this.addView(iv_border, iv_border_params);
+            this.addView(iv_scale, iv_scale_params);
+            this.addView(iv_flip, iv_flip_params);
+            this.addView(iv_color_palette, iv_color_palette_params);
+            this.addView(iv_text_editor, iv_text_editor_params);
+
+            this.setOnTouchListener(mTouchListener);
+        }
+
+        this.iv_scale.setOnTouchListener(mTouchListener);
+        this.iv_delete.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (StickerView.this.getParent() != null) {
+                    ViewGroup myCanvas = ((ViewGroup) StickerView.this.getParent());
+                    myCanvas.removeView(StickerView.this);
+
+                    if (mStickerDeleteListener != null)
+                        mStickerDeleteListener.onStickerRemoved();
+                }
+            }
+        });
+        this.iv_flip.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                Log.v(TAG, "flip the view");
+
+                View mainView = getMainView();
+                mainView.setRotationY(mainView.getRotationY() == -180f ? 0f : -180f);
+                mainView.invalidate();
+                requestLayout();
+            }
+        });
+    }
+
+    public boolean isFlip() {
+        return getMainView().getRotationY() == -180f;
+    }
+
+    protected abstract View getMainView();
+
+    private void changeControlVisibility(boolean visible) {
+        iv_border.setVisibility(visible ? VISIBLE : GONE);
+        iv_scale.setVisibility(visible ? VISIBLE : GONE);
+        iv_delete.setVisibility(visible ? VISIBLE : GONE);
+
+        if (visible) {
+            if (this instanceof StickerImageView) {
+                iv_flip.setVisibility(VISIBLE);
+                iv_color_palette.setVisibility(GONE);
+                iv_text_editor.setVisibility(GONE);
+            } else if (this instanceof StickerTextView) {
+                iv_flip.setVisibility(GONE);
+                iv_color_palette.setVisibility(VISIBLE);
+                iv_text_editor.setVisibility(VISIBLE);
+            }
+        } else {
+            iv_flip.setVisibility(GONE);
+            iv_color_palette.setVisibility(GONE);
+            iv_text_editor.setVisibility(GONE);
+        }
+    }
+
+    public void hideControls() {
+        changeControlVisibility(false);
+    }
+
+    public void showControls() {
+        changeControlVisibility(true);
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -377,7 +386,7 @@ public abstract class StickerView extends FrameLayout {
         return iv_flip;
     }
 
-    protected View getColorPalette() {
+    protected View getImageViewColorPalette() {
         return iv_color_palette;
     }
 
@@ -385,10 +394,22 @@ public abstract class StickerView extends FrameLayout {
         return iv_text_editor;
     }
 
+    protected View getImageViewExpane() {
+        return iv_scale;
+    }
+
     protected void onScaling(boolean scaleUp) {
     }
 
     protected void onRotating() {
+    }
+
+    public void setStickerDeleteListener(StickerDeleteListener stickerDeleteListener) {
+        this.mStickerDeleteListener = stickerDeleteListener;
+    }
+
+    public interface StickerDeleteListener {
+        void onStickerRemoved();
     }
 
     private class BorderView extends View {
@@ -426,20 +447,5 @@ public abstract class StickerView extends FrameLayout {
             canvas.drawRect(border, borderPaint);
 
         }
-    }
-
-    private static int convertDpToPixel(float dp, Context context) {
-        Resources resources = context.getResources();
-        DisplayMetrics metrics = resources.getDisplayMetrics();
-        float px = dp * (metrics.densityDpi / 160f);
-        return (int) px;
-    }
-
-    public void setStickerDeleteListener(StickerDeleteListener stickerDeleteListener) {
-        this.mStickerDeleteListener = stickerDeleteListener;
-    }
-
-    public interface StickerDeleteListener {
-        void onStickerRemoved();
     }
 }

@@ -30,6 +30,7 @@ import androidx.appcompat.widget.AppCompatImageView;
 
 public class StickerHolder extends FrameLayout {
 
+    private static final long DELAY = 1000;
     private final String TAG = getClass().getSimpleName();
     private Context mContext;
     private View rootView;
@@ -41,7 +42,18 @@ public class StickerHolder extends FrameLayout {
     private AppCompatImageButton btDone;
     private StickerTextView currentStickerTextView;
     private Timer timer;
-    private static final long DELAY = 1000;
+    private OnTouchListener mOnTouchListener = new OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent event) {
+            if (view.getTag().equals("StickerHolder")) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        hideControlsOfAllChildStickerView();
+                }
+            }
+            return true;
+        }
+    };
 
     public StickerHolder(Context context) {
         super(context);
@@ -121,23 +133,10 @@ public class StickerHolder extends FrameLayout {
         });
     }
 
-    private OnTouchListener mOnTouchListener = new OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent event) {
-            if (view.getTag().equals("StickerHolder")) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        hideControlsOfAllChildStickerView();
-                }
-            }
-            return true;
-        }
-    };
-
     public void hideControlsOfAllChildStickerView() {
         for (int i = 0; i < innerStickerHolder.getChildCount(); i++) {
             View view = innerStickerHolder.getChildAt(i);
-            if (view instanceof StickerView) {
+            if (view instanceof StickerView && !(view instanceof StickerFrameView)) {
                 ((StickerView) view).hideControls();
             }
         }
@@ -159,6 +158,19 @@ public class StickerHolder extends FrameLayout {
         StickerImageView stickerImageView = new StickerImageView(mContext);
         stickerImageView.setImageDrawable(new BitmapDrawable(getResources(), bitmap));
         innerStickerHolder.addView(stickerImageView);
+    }
+
+    public void addFrameSticker(Bitmap bitmap) {
+        hideControlsOfAllChildStickerView();
+
+        StickerFrameView stickerFrameView = new StickerFrameView(mContext);
+        stickerFrameView.setImageDrawable(new BitmapDrawable(getResources(), bitmap));
+
+        if (innerStickerHolder.getChildAt(0) instanceof StickerFrameView) {
+            innerStickerHolder.removeViewAt(0);
+        }
+
+        innerStickerHolder.addView(stickerFrameView, 0);
     }
 
     public void addTextSticker() {

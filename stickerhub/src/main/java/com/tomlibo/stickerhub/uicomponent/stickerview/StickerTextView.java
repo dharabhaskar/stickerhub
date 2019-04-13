@@ -27,6 +27,11 @@ public class StickerTextView extends StickerView {
         super(context, attrs, defStyle);
     }
 
+    public static float pixelsToSp(Context context, float px) {
+        float scaledDensity = context.getResources().getDisplayMetrics().scaledDensity;
+        return px / scaledDensity;
+    }
+
     @Override
     public View getMainView() {
         if (tv_main != null)
@@ -49,8 +54,8 @@ public class StickerTextView extends StickerView {
         if (getImageViewFlip() != null)
             getImageViewFlip().setVisibility(View.GONE);
 
-        if (getColorPalette() != null) {
-            getColorPalette().setOnClickListener(new OnClickListener() {
+        if (getImageViewColorPalette() != null) {
+            getImageViewColorPalette().setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mTextStickerClickListener.onColorPaletteClicked(StickerTextView.this);
@@ -70,11 +75,6 @@ public class StickerTextView extends StickerView {
         return tv_main;
     }
 
-    public void setText(String text) {
-        if (tv_main != null)
-            tv_main.setText(text);
-    }
-
     public String getText() {
         if (tv_main != null)
             return tv_main.getText().toString();
@@ -82,9 +82,9 @@ public class StickerTextView extends StickerView {
         return null;
     }
 
-    public void setTextColor(String colorCode) {
+    public void setText(String text) {
         if (tv_main != null)
-            tv_main.setTextColor(Color.parseColor(colorCode));
+            tv_main.setText(text);
     }
 
     public int getTextColor() {
@@ -94,9 +94,9 @@ public class StickerTextView extends StickerView {
         return 0;
     }
 
-    public static float pixelsToSp(Context context, float px) {
-        float scaledDensity = context.getResources().getDisplayMetrics().scaledDensity;
-        return px / scaledDensity;
+    public void setTextColor(String colorCode) {
+        if (tv_main != null)
+            tv_main.setTextColor(Color.parseColor(colorCode));
     }
 
     @Override

@@ -15,28 +15,21 @@ import com.tomlibo.stickerhub.R;
 
 public class CircleView extends View {
 
+    private static final int DEFAULT_VIEW_SIZE = 96;
     private static int DEFAULT_TITLE_COLOR = Color.CYAN;
     private static int DEFAULT_SUBTITLE_COLOR = Color.WHITE;
-
     private static String DEFAULT_TITLE = "";
     private static String DEFAULT_SUBTITLE = "";
-
     private static boolean DEFAULT_SHOW_TITLE = true;
     private static boolean DEFAULT_SHOW_SUBTITLE = true;
-
     private static float DEFAULT_TITLE_SIZE = 25f;
     private static float DEFAULT_SUBTITLE_SIZE = 20f;
     private static float DEFAULT_TITLE_SUBTITLE_SPACE = 0f;
-
     private static int DEFAULT_STROKE_COLOR = Color.CYAN;
     private static int DEFAULT_BACKGROUND_COLOR = Color.WHITE;
     private static int DEFAULT_FILL_COLOR = Color.DKGRAY;
-
     private static float DEFAULT_STROKE_WIDTH = 5f;
     private static float DEFAULT_FILL_RADIUS = 0.9f;
-
-    private static final int DEFAULT_VIEW_SIZE = 96;
-
     private int mTitleColor = DEFAULT_TITLE_COLOR;
     private int mSubtitleColor = DEFAULT_SUBTITLE_COLOR;
     private int mStrokeColor = DEFAULT_STROKE_COLOR;
@@ -284,12 +277,32 @@ public class CircleView extends View {
     }
 
     /**
+     * Sets the view's stroke color attribute value.
+     *
+     * @param strokeColor The stroke color attribute value to use.
+     */
+    public void setStrokeColor(int strokeColor) {
+        mStrokeColor = strokeColor;
+        invalidatePaints();
+    }
+
+    /**
      * Gets the background color attribute value.
      *
      * @return The background color attribute value.
      */
     public int getBackgroundColor() {
         return mBackgroundColor;
+    }
+
+    /**
+     * Sets the view's stroke width attribute value.
+     *
+     * @param strokeWidth The stroke width attribute value to use.
+     */
+    public void setBackgroundColor(float strokeWidth) {
+        mStrokeWidth = strokeWidth;
+        invalidate();
     }
 
     /**
@@ -302,12 +315,12 @@ public class CircleView extends View {
     }
 
     /**
-     * Sets the view's stroke color attribute value.
+     * Sets the view's fill color attribute value.
      *
-     * @param strokeColor The stroke color attribute value to use.
+     * @param fillColor The fill color attribute value to use.
      */
-    public void setStrokeColor(int strokeColor) {
-        mStrokeColor = strokeColor;
+    public void setFillColor(int fillColor) {
+        mFillColor = fillColor;
         invalidatePaints();
     }
 
@@ -322,32 +335,12 @@ public class CircleView extends View {
     }
 
     /**
-     * Sets the view's fill color attribute value.
-     *
-     * @param fillColor The fill color attribute value to use.
-     */
-    public void setFillColor(int fillColor) {
-        mFillColor = fillColor;
-        invalidatePaints();
-    }
-
-    /**
      * Gets the stroke width dimension attribute value.
      *
      * @return The stroke width dimension attribute value.
      */
     public float getStrokeWidth() {
         return mStrokeWidth;
-    }
-
-    /**
-     * Sets the view's stroke width attribute value.
-     *
-     * @param strokeWidth The stroke width attribute value to use.
-     */
-    public void setBackgroundColor(float strokeWidth) {
-        mStrokeWidth = strokeWidth;
-        invalidate();
     }
 
     /**
