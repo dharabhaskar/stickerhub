@@ -18,7 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.tomlibo.stickerhub.R;
-import com.tomlibo.stickerhub.uicomponent.colorpicker.ColorPickerPopup;
+import com.tomlibo.stickerhub.uicomponent.colorpicker.ColorPickerDialog;
 import com.tomlibo.stickerhub.util.Utils;
 
 import java.util.Timer;
@@ -203,7 +203,7 @@ public class StickerHolder extends FrameLayout {
     }
 
     private void textColorPicker() {
-        new ColorPickerPopup.Builder(mContext)
+        new ColorPickerDialog.Builder(mContext)
                 .initialColor(currentStickerTextView.getTextColor()) // Set initial color
                 .enableBrightness(true) // Enable brightness slider or not
                 .enableAlpha(false) // Enable alpha slider or not
@@ -212,7 +212,7 @@ public class StickerHolder extends FrameLayout {
                 .showIndicator(true)
                 .showValue(false)
                 .build()
-                .show(rootView, new ColorPickerPopup.ColorPickerObserver() {
+                .show(new ColorPickerDialog.ColorPickerObserver() {
                     @Override
                     public void onColorPicked(String color) {
                         currentStickerTextView.setTextColor(color);

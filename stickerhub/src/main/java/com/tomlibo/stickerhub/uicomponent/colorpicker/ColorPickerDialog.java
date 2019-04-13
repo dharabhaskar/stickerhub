@@ -1,27 +1,25 @@
 package com.tomlibo.stickerhub.uicomponent.colorpicker;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.tomlibo.stickerhub.R;
 
 import java.util.Locale;
 
+import androidx.appcompat.app.AlertDialog;
+
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
-public class ColorPickerPopup {
+public class ColorPickerDialog {
 
     private Context context;
-    private PopupWindow popupWindow;
+    private AlertDialog.Builder colorPickerBuilder;
+    private AlertDialog colorPickerDialog;
     private int initialColor;
     private boolean enableBrightness;
     private boolean enableAlpha;
@@ -31,7 +29,7 @@ public class ColorPickerPopup {
     private boolean showValue;
     private boolean onlyUpdateOnTouchEventUp;
 
-    private ColorPickerPopup(Builder builder) {
+    private ColorPickerDialog(Builder builder) {
         this.context = builder.context;
         this.initialColor = builder.initialColor;
         this.enableBrightness = builder.enableBrightness;
@@ -44,43 +42,37 @@ public class ColorPickerPopup {
     }
 
     public void show(final ColorPickerObserver observer) {
-        show(null, observer);
-    }
-
-    public void show(View parent, final ColorPickerObserver observer) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
-        if (inflater == null) return;
+        View layout = inflater.inflate(R.layout.top_defaults_view_color_picker_dialog, null);
+        colorPickerBuilder = new AlertDialog.Builder(context);
+        colorPickerBuilder.setView(layout);
 
-        @SuppressLint("InflateParams")
-        View layout = inflater.inflate(R.layout.top_defaults_view_color_picker_popup, null);
         final ColorPickerView colorPickerView = layout.findViewById(R.id.colorPickerView);
-        popupWindow = new PopupWindow(layout, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
-        popupWindow.setOutsideTouchable(true);
         colorPickerView.setInitialColor(initialColor);
         colorPickerView.setEnabledBrightness(enableBrightness);
         colorPickerView.setEnabledAlpha(enableAlpha);
         colorPickerView.setOnlyUpdateOnTouchEventUp(onlyUpdateOnTouchEventUp);
         colorPickerView.subscribe(observer);
-        TextView cancel = layout.findViewById(R.id.cancel);
-        cancel.setText(cancelTitle);
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popupWindow.dismiss();
-            }
-        });
-        TextView ok = layout.findViewById(R.id.ok);
-        ok.setText(okTitle);
-        ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popupWindow.dismiss();
-                if (observer != null) {
-                    observer.onColorPicked("#" + Integer.toHexString(colorPickerView.getColor()));
-                }
-            }
-        });
+
+        colorPickerBuilder.setPositiveButton(
+                cancelTitle,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dismiss();
+                    }
+                });
+
+        colorPickerBuilder.setNegativeButton(
+                okTitle,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dismiss();
+
+                        if (observer != null) {
+                            observer.onColorPicked("#" + Integer.toHexString(colorPickerView.getColor()));
+                        }
+                    }
+                });
 
         final View colorIndicator = layout.findViewById(R.id.colorIndicator);
         final TextView colorHex = layout.findViewById(R.id.colorHex);
@@ -91,9 +83,11 @@ public class ColorPickerPopup {
         if (showIndicator) {
             colorIndicator.setBackgroundColor(initialColor);
         }
+
         if (showValue) {
             colorHex.setText(colorHex(initialColor));
         }
+
         colorPickerView.subscribe(new ColorObserver() {
             @Override
             public void onColor(int color, boolean fromUser, boolean shouldPropagate) {
@@ -106,18 +100,15 @@ public class ColorPickerPopup {
             }
         });
 
-        if (Build.VERSION.SDK_INT >= 21) {
-            popupWindow.setElevation(10.0f);
-        }
-
-        popupWindow.setAnimationStyle(R.style.TopDefaultsViewColorPickerPopupAnimation);
-        if (parent == null) parent = layout;
-        popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
+        colorPickerBuilder.setCancelable(false);
+        colorPickerDialog = colorPickerBuilder.create();
+        colorPickerDialog.setCanceledOnTouchOutside(true);
+        colorPickerDialog.show();
     }
 
-    public void dismiss() {
-        if (popupWindow != null) {
-            popupWindow.dismiss();
+    private void dismiss() {
+        if (colorPickerDialog != null) {
+            colorPickerDialog.dismiss();
         }
     }
 
@@ -178,8 +169,8 @@ public class ColorPickerPopup {
             return this;
         }
 
-        public ColorPickerPopup build() {
-            return new ColorPickerPopup(this);
+        public ColorPickerDialog build() {
+            return new ColorPickerDialog(this);
         }
     }
 
