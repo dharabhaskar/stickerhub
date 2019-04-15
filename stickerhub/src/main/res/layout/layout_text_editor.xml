@@ -4,33 +4,82 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white_transparent"
-    android:orientation="horizontal"
-    android:paddingStart="8dp"
-    android:paddingTop="16dp"
-    android:paddingEnd="8dp"
-    android:paddingBottom="16dp"
-    android:visibility="gone">
+    android:orientation="vertical"
+    android:padding="8dp">
 
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/etTextEditor"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="@color/black_transparent"
-        android:hint="Type your text here..."
-        android:padding="8dp"
-        android:singleLine="true"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white_transparent" />
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp">
 
-    <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/btDone"
-        android:layout_width="wrap_content"
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btFont"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?android:selectableItemBackgroundBorderless"
+            android:padding="4dp"
+            android:src="@drawable/ic_font" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btBold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:background="?android:selectableItemBackgroundBorderless"
+            android:padding="4dp"
+            android:src="@drawable/ic_bold_grey" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btItalic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:background="?android:selectableItemBackgroundBorderless"
+            android:padding="4dp"
+            android:src="@drawable/ic_italic_grey" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btUnderline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:background="?android:selectableItemBackgroundBorderless"
+            android:padding="4dp"
+            android:src="@drawable/ic_underline_grey" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginStart="8dp"
-        android:background="?android:selectableItemBackgroundBorderless"
-        android:padding="4dp"
-        android:src="@drawable/ic_done" />
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/etTextEditor"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/black_transparent"
+            android:hint="Type your text here..."
+            android:padding="8dp"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white_transparent" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btDone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="8dp"
+            android:background="?android:selectableItemBackgroundBorderless"
+            android:padding="4dp"
+            android:src="@drawable/ic_done" />
+
+    </LinearLayout>
 
 </LinearLayout>

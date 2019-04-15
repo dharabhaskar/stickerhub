@@ -38,7 +38,10 @@
 
         </FrameLayout>
 
-        <include layout="@layout/layout_text_editor" />
+        <FrameLayout
+            android:id="@+id/flContainerTextEditor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 

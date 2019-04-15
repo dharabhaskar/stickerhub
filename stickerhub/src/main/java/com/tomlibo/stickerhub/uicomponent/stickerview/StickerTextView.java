@@ -38,7 +38,6 @@ public class StickerTextView extends StickerView {
             return tv_main;
 
         tv_main = new AutoResizeTextView(getContext());
-        //tv_main.setTextSize(22);
         tv_main.setTextColor(Color.WHITE);
         tv_main.setGravity(Gravity.CENTER);
         tv_main.setTextSize(400);

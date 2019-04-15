@@ -1,12 +1,9 @@
 package com.tomlibo.stickerhub.uicomponent.stickerview;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -14,34 +11,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.tomlibo.stickerhub.R;
 import com.tomlibo.stickerhub.uicomponent.colorpicker.ColorPickerDialog;
 import com.tomlibo.stickerhub.util.Utils;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
-import androidx.appcompat.widget.AppCompatEditText;
-import androidx.appcompat.widget.AppCompatImageButton;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 
 public class StickerHolder extends FrameLayout {
 
-    private static final long DELAY = 1000;
     private final String TAG = getClass().getSimpleName();
     private Context mContext;
     private View rootView;
     private RelativeLayout layoutMainView;
     private FrameLayout innerStickerHolder;
     private AppCompatImageView backgroundImageView;
-    private LinearLayout layoutTextEditor;
-    private AppCompatEditText etTextEditor;
-    private AppCompatImageButton btDone;
     private StickerTextView currentStickerTextView;
-    private Timer timer;
+    private TextEditorFragment textEditorFragment;
+
     private OnTouchListener mOnTouchListener = new OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent event) {
@@ -70,7 +59,7 @@ public class StickerHolder extends FrameLayout {
         init(context);
     }
 
-    private void init(Context context) {
+    private void init(final Context context) {
         mContext = context;
 
         //Inflate component layout
@@ -87,48 +76,15 @@ public class StickerHolder extends FrameLayout {
         layoutMainView = findViewById(R.id.layout_mainView);
         innerStickerHolder = findViewById(R.id.layout_innerView);
         backgroundImageView = findViewById(R.id.iv_background);
-        layoutTextEditor = findViewById(R.id.layoutTextEditor);
-        etTextEditor = findViewById(R.id.etTextEditor);
-        btDone = findViewById(R.id.btDone);
 
         innerStickerHolder.setTag("StickerHolder");
         innerStickerHolder.setOnTouchListener(mOnTouchListener);
 
-        btDone.setOnClickListener(new OnClickListener() {
+        textEditorFragment = new TextEditorFragment();
+        textEditorFragment.setTextEditorDismissListener(new TextEditorFragment.TextEditorDismissListener() {
             @Override
-            public void onClick(View v) {
+            public void textEditorDismissed() {
                 textEditorControlVisibility(false);
-                currentStickerTextView.setText(etTextEditor.getText().toString().trim());
-            }
-        });
-
-        etTextEditor.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (timer != null) {
-                    timer.cancel();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(final Editable s) {
-                timer = new Timer();
-                timer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        ((Activity) mContext).runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                currentStickerTextView.setText(String.valueOf(s));
-                            }
-                        });
-                    }
-                }, DELAY);
             }
         });
     }
@@ -191,9 +147,6 @@ public class StickerHolder extends FrameLayout {
             public void onTextEditorClicked(View view, String text) {
                 currentStickerTextView = (StickerTextView) view;
                 textEditorControlVisibility(true);
-                etTextEditor.setText(text);
-                etTextEditor.setSelection(etTextEditor.getText().length());
-                etTextEditor.requestFocus();
             }
         });
 
@@ -211,7 +164,17 @@ public class StickerHolder extends FrameLayout {
     }
 
     public void textEditorControlVisibility(boolean visible) {
-        layoutTextEditor.setVisibility(visible ? VISIBLE : GONE);
+        textEditorFragment.setStickerTextView(mContext, currentStickerTextView);
+
+        if (visible) {
+            rootView.findViewById(R.id.flContainerTextEditor).setVisibility(VISIBLE);
+
+            ((AppCompatActivity) mContext).getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.flContainerTextEditor, textEditorFragment)
+                    .commit();
+        } else {
+            rootView.findViewById(R.id.flContainerTextEditor).setVisibility(GONE);
+        }
     }
 
     private void textColorPicker() {
