@@ -296,6 +296,16 @@ public class CircleView extends View {
     }
 
     /**
+     * Sets the view's background color attribute value.
+     *
+     * @param backgroundColor The background color attribute value to use.
+     */
+    public void setBackgroundColor(int backgroundColor) {
+        mBackgroundColor = backgroundColor;
+        invalidatePaints();
+    }
+
+    /**
      * Sets the view's stroke width attribute value.
      *
      * @param strokeWidth The stroke width attribute value to use.
@@ -321,16 +331,6 @@ public class CircleView extends View {
      */
     public void setFillColor(int fillColor) {
         mFillColor = fillColor;
-        invalidatePaints();
-    }
-
-    /**
-     * Sets the view's background color attribute value.
-     *
-     * @param backgroundColor The background color attribute value to use.
-     */
-    public void setBackgroundColor(int backgroundColor) {
-        mBackgroundColor = backgroundColor;
         invalidatePaints();
     }
 
