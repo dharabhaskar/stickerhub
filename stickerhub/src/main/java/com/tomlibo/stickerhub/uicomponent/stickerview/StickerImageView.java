@@ -51,6 +51,11 @@ public class StickerImageView extends StickerView {
         return iv_main;
     }
 
+    protected void changeControlVisibility(boolean visible) {
+        super.changeControlVisibility(visible);
+        iv_flip.setVisibility(visible?VISIBLE:GONE);
+    }
+
     public void setImageResource(int res_id) {
         this.iv_main.setImageResource(res_id);
     }

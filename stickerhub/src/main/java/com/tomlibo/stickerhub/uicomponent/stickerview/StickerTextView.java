@@ -70,8 +70,14 @@ public class StickerTextView extends StickerView {
                 }
             });
         }
-
         return tv_main;
+    }
+
+    @Override
+    protected void changeControlVisibility(boolean visible) {
+        super.changeControlVisibility(visible);
+        iv_color_palette.setVisibility(visible?VISIBLE:GONE);
+        iv_text_editor.setVisibility(visible?VISIBLE:GONE);
     }
 
     public String getText() {

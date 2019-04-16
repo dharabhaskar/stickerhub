@@ -5,7 +5,9 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.appcompat.widget.AppCompatImageView;
@@ -25,6 +27,33 @@ public class StickerFrameView extends StickerView {
 
     public StickerFrameView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+    }
+
+    @Override
+    protected void init(Context context) {
+        super.init(context);
+        LayoutParams this_params =
+                new LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT
+                );
+        this_params.gravity = Gravity.CENTER;
+        setLayoutParams(this_params);
+
+        //Setting layout params for main layout...
+        LayoutParams iv_main_params =
+                new LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT
+                );
+        iv_main_params.setMargins(0, 0, 0, 0);
+        getMainView().setLayoutParams(iv_main_params);
+
+        //Removing border
+        removeView(findViewWithTag("iv_border"));
+
+        //Removing on touch listener...
+        setOnTouchListener(null);
     }
 
     public String getOwnerId() {
@@ -47,9 +76,6 @@ public class StickerFrameView extends StickerView {
 
         if (getImageViewColorPalette() != null)
             getImageViewColorPalette().setVisibility(View.GONE);
-
-        if (getImageViewTextEditor() != null)
-            getImageViewTextEditor().setVisibility(View.GONE);
 
         if (getImageViewTextEditor() != null)
             getImageViewTextEditor().setVisibility(View.GONE);
