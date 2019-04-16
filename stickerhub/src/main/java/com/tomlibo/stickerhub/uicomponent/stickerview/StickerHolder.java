@@ -31,19 +31,6 @@ public class StickerHolder extends FrameLayout {
     private StickerTextView currentStickerTextView;
     private TextEditorFragment textEditorFragment;
 
-    private OnTouchListener mOnTouchListener = new OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent event) {
-            if (view.getTag().equals("StickerHolder")) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        hideControlsOfAllChildStickerView();
-                }
-            }
-            return true;
-        }
-    };
-
     public StickerHolder(Context context) {
         super(context);
         init(context);
@@ -88,6 +75,19 @@ public class StickerHolder extends FrameLayout {
             }
         });
     }
+
+    private OnTouchListener mOnTouchListener = new OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent event) {
+            if (view.getTag().equals("StickerHolder")) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        hideControlsOfAllChildStickerView();
+                }
+            }
+            return true;
+        }
+    };
 
     public void hideControlsOfAllChildStickerView() {
         for (int i = 0; i < innerStickerHolder.getChildCount(); i++) {

@@ -39,141 +39,6 @@ public abstract class StickerView extends FrameLayout {
     private float move_orgX = -1, move_orgY = -1;
     private double centerX, centerY;
     private StickerDeleteListener mStickerDeleteListener;
-    private OnTouchListener mTouchListener = new OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent event) {
-
-            if (view.getTag().equals("DraggableViewGroup")) {
-                ViewGroup myCanvas = ((ViewGroup) StickerView.this.getParent().getParent().getParent().getParent().getParent().getParent());
-                if (myCanvas instanceof StickerHolder) {
-                    ((StickerHolder) myCanvas).hideControlsOfAllChildStickerView();
-                }
-                showControls();
-
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        Log.v(TAG, "sticker view action down");
-                        move_orgX = event.getRawX();
-                        move_orgY = event.getRawY();
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        Log.v(TAG, "sticker view action move");
-                        float offsetX = event.getRawX() - move_orgX;
-                        float offsetY = event.getRawY() - move_orgY;
-                        StickerView.this.setX(StickerView.this.getX() + offsetX);
-                        StickerView.this.setY(StickerView.this.getY() + offsetY);
-                        move_orgX = event.getRawX();
-                        move_orgY = event.getRawY();
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        Log.v(TAG, "sticker view action up");
-                        break;
-                }
-            } else if (view.getTag().equals("iv_scale")) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        Log.v(TAG, "iv_scale action down");
-
-                        this_orgX = StickerView.this.getX();
-                        this_orgY = StickerView.this.getY();
-
-                        scale_orgX = event.getRawX();
-                        scale_orgY = event.getRawY();
-                        scale_orgWidth = StickerView.this.getLayoutParams().width;
-                        scale_orgHeight = StickerView.this.getLayoutParams().height;
-
-                        rotate_orgX = event.getRawX();
-                        rotate_orgY = event.getRawY();
-
-                        centerX = StickerView.this.getX() +
-                                ((View) StickerView.this.getParent()).getX() +
-                                (float) StickerView.this.getWidth() / 2;
-
-
-                        //double statusBarHeight = Math.ceil(25 * getContext().getResources().getDisplayMetrics().density);
-                        int result = 0;
-                        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-                        if (resourceId > 0) {
-                            result = getResources().getDimensionPixelSize(resourceId);
-                        }
-                        double statusBarHeight = result;
-                        centerY = StickerView.this.getY() +
-                                ((View) StickerView.this.getParent()).getY() +
-                                statusBarHeight +
-                                (float) StickerView.this.getHeight() / 2;
-
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        Log.v(TAG, "iv_scale action move");
-
-                        rotate_newX = event.getRawX();
-                        rotate_newY = event.getRawY();
-
-                        double angle_diff = Math.abs(
-                                Math.atan2(event.getRawY() - scale_orgY, event.getRawX() - scale_orgX)
-                                        - Math.atan2(scale_orgY - centerY, scale_orgX - centerX)) * 180 / Math.PI;
-
-                        Log.v(TAG, "angle_diff: " + angle_diff);
-
-                        double length1 = getLength(centerX, centerY, scale_orgX, scale_orgY);
-                        double length2 = getLength(centerX, centerY, event.getRawX(), event.getRawY());
-
-                        int size = convertDpToPixel(SELF_SIZE_DP, getContext());
-                        if (length2 > length1
-                                && (angle_diff < 25 || Math.abs(angle_diff - 180) < 25)
-                        ) {
-                            //scale up
-                            double offsetX = Math.abs(event.getRawX() - scale_orgX);
-                            double offsetY = Math.abs(event.getRawY() - scale_orgY);
-                            double offset = Math.max(offsetX, offsetY);
-                            offset = Math.round(offset);
-                            StickerView.this.getLayoutParams().width += offset;
-                            StickerView.this.getLayoutParams().height += offset;
-                            onScaling(true);
-                            //DraggableViewGroup.this.setX((float) (getX() - offset / 2));
-                            //DraggableViewGroup.this.setY((float) (getY() - offset / 2));
-                        } else if (length2 < length1
-                                && (angle_diff < 25 || Math.abs(angle_diff - 180) < 25)
-                                && StickerView.this.getLayoutParams().width > size / 2
-                                && StickerView.this.getLayoutParams().height > size / 2) {
-                            //scale down
-                            double offsetX = Math.abs(event.getRawX() - scale_orgX);
-                            double offsetY = Math.abs(event.getRawY() - scale_orgY);
-                            double offset = Math.max(offsetX, offsetY);
-                            offset = Math.round(offset);
-                            StickerView.this.getLayoutParams().width -= offset;
-                            StickerView.this.getLayoutParams().height -= offset;
-                            onScaling(false);
-                        }
-
-                        //rotate
-
-                        double angle = Math.atan2(event.getRawY() - centerY, event.getRawX() - centerX) * 180 / Math.PI;
-                        Log.v(TAG, "log angle: " + angle);
-
-                        //setRotation((float) angle - 45);
-                        setRotation((float) angle - 45);
-                        Log.v(TAG, "getRotation(): " + getRotation());
-
-                        onRotating();
-
-                        rotate_orgX = rotate_newX;
-                        rotate_orgY = rotate_newY;
-
-                        scale_orgX = event.getRawX();
-                        scale_orgY = event.getRawY();
-
-                        postInvalidate();
-                        requestLayout();
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        Log.v(TAG, "iv_scale action up");
-                        break;
-                }
-            }
-            return true;
-        }
-    };
 
     public StickerView(Context context) {
         super(context);
@@ -326,6 +191,140 @@ public abstract class StickerView extends FrameLayout {
     }
 
     protected abstract View getMainView();
+
+    private OnTouchListener mTouchListener = new OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent event) {
+
+            if (view.getTag().equals("DraggableViewGroup")) {
+                ViewGroup myCanvas = ((ViewGroup) StickerView.this.getParent().getParent().getParent().getParent().getParent().getParent());
+                if (myCanvas instanceof StickerHolder) {
+                    ((StickerHolder) myCanvas).hideControlsOfAllChildStickerView();
+                }
+                showControls();
+
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        Log.v(TAG, "sticker view action down");
+                        move_orgX = event.getRawX();
+                        move_orgY = event.getRawY();
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        Log.v(TAG, "sticker view action move");
+                        float offsetX = event.getRawX() - move_orgX;
+                        float offsetY = event.getRawY() - move_orgY;
+                        StickerView.this.setX(StickerView.this.getX() + offsetX);
+                        StickerView.this.setY(StickerView.this.getY() + offsetY);
+                        move_orgX = event.getRawX();
+                        move_orgY = event.getRawY();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        Log.v(TAG, "sticker view action up");
+                        break;
+                }
+            } else if (view.getTag().equals("iv_scale")) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        Log.v(TAG, "iv_scale action down");
+
+                        this_orgX = StickerView.this.getX();
+                        this_orgY = StickerView.this.getY();
+
+                        scale_orgX = event.getRawX();
+                        scale_orgY = event.getRawY();
+                        scale_orgWidth = StickerView.this.getLayoutParams().width;
+                        scale_orgHeight = StickerView.this.getLayoutParams().height;
+
+                        rotate_orgX = event.getRawX();
+                        rotate_orgY = event.getRawY();
+
+                        centerX = StickerView.this.getX() +
+                                ((View) StickerView.this.getParent()).getX() +
+                                (float) StickerView.this.getWidth() / 2;
+
+
+                        //double statusBarHeight = Math.ceil(25 * getContext().getResources().getDisplayMetrics().density);
+                        int result = 0;
+                        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+                        if (resourceId > 0) {
+                            result = getResources().getDimensionPixelSize(resourceId);
+                        }
+                        double statusBarHeight = result;
+                        centerY = StickerView.this.getY() +
+                                ((View) StickerView.this.getParent()).getY() +
+                                statusBarHeight +
+                                (float) StickerView.this.getHeight() / 2;
+
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        Log.v(TAG, "iv_scale action move");
+
+                        rotate_newX = event.getRawX();
+                        rotate_newY = event.getRawY();
+
+                        double angle_diff = Math.abs(
+                                Math.atan2(event.getRawY() - scale_orgY, event.getRawX() - scale_orgX)
+                                        - Math.atan2(scale_orgY - centerY, scale_orgX - centerX)) * 180 / Math.PI;
+
+                        Log.v(TAG, "angle_diff: " + angle_diff);
+
+                        double length1 = getLength(centerX, centerY, scale_orgX, scale_orgY);
+                        double length2 = getLength(centerX, centerY, event.getRawX(), event.getRawY());
+
+                        int size = convertDpToPixel(SELF_SIZE_DP, getContext());
+                        if (length2 > length1
+                                && (angle_diff < 25 || Math.abs(angle_diff - 180) < 25)
+                        ) {
+                            //scale up
+                            double offsetX = Math.abs(event.getRawX() - scale_orgX);
+                            double offsetY = Math.abs(event.getRawY() - scale_orgY);
+                            double offset = Math.max(offsetX, offsetY);
+                            offset = Math.round(offset);
+                            StickerView.this.getLayoutParams().width += offset;
+                            StickerView.this.getLayoutParams().height += offset;
+                            onScaling(true);
+                            //DraggableViewGroup.this.setX((float) (getX() - offset / 2));
+                            //DraggableViewGroup.this.setY((float) (getY() - offset / 2));
+                        } else if (length2 < length1
+                                && (angle_diff < 25 || Math.abs(angle_diff - 180) < 25)
+                                && StickerView.this.getLayoutParams().width > size / 2
+                                && StickerView.this.getLayoutParams().height > size / 2) {
+                            //scale down
+                            double offsetX = Math.abs(event.getRawX() - scale_orgX);
+                            double offsetY = Math.abs(event.getRawY() - scale_orgY);
+                            double offset = Math.max(offsetX, offsetY);
+                            offset = Math.round(offset);
+                            StickerView.this.getLayoutParams().width -= offset;
+                            StickerView.this.getLayoutParams().height -= offset;
+                            onScaling(false);
+                        }
+
+                        //rotate
+                        double angle = Math.atan2(event.getRawY() - centerY, event.getRawX() - centerX) * 180 / Math.PI;
+                        Log.v(TAG, "log angle: " + angle);
+
+                        setRotation((float) angle - 45);
+                        Log.v(TAG, "getRotation(): " + getRotation());
+
+                        onRotating();
+
+                        rotate_orgX = rotate_newX;
+                        rotate_orgY = rotate_newY;
+
+                        scale_orgX = event.getRawX();
+                        scale_orgY = event.getRawY();
+
+                        postInvalidate();
+                        requestLayout();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        Log.v(TAG, "iv_scale action up");
+                        break;
+                }
+            }
+            return true;
+        }
+    };
 
     protected void changeControlVisibility(boolean visible) {
         iv_border.setVisibility(visible ? VISIBLE : GONE);

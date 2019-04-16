@@ -19,23 +19,20 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatImageButton;
-import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
 
-public class TextEditorFragment extends Fragment {
+public class TextEditorFragment extends Fragment implements View.OnClickListener {
 
+    private static final long DELAY = 1000;
     private final String TAG = getClass().getSimpleName();
-
     private AppCompatImageButton btFont;
     private AppCompatImageButton btBold;
     private AppCompatImageButton btItalic;
     private AppCompatImageButton btUnderline;
     private AppCompatEditText etTextEditor;
     private AppCompatImageButton btDone;
-
     private Context mContext;
     private StickerTextView mStickerTextView;
-    private static final long DELAY = 1000;
     private Timer timer;
     private TextEditorDismissListener mTextEditorDismissListener;
 
@@ -96,20 +93,15 @@ public class TextEditorFragment extends Fragment {
             }
         });
 
-        btFont.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((AppCompatTextView) mStickerTextView.getMainView()).setTypeface(FontUtils.getNextFont(mContext));
-            }
-        });
+        btBold.setImageResource(mStickerTextView.isBold() ? R.drawable.ic_bold : R.drawable.ic_bold_grey);
+        btItalic.setImageResource(mStickerTextView.isItalic() ? R.drawable.ic_italic : R.drawable.ic_italic_grey);
+        btUnderline.setImageResource(mStickerTextView.isUnderline() ? R.drawable.ic_underline : R.drawable.ic_underline_grey);
 
-        btDone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mStickerTextView.setText(etTextEditor.getText().toString().trim());
-                mTextEditorDismissListener.textEditorDismissed();
-            }
-        });
+        btFont.setOnClickListener(this);
+        btBold.setOnClickListener(this);
+        btItalic.setOnClickListener(this);
+        btUnderline.setOnClickListener(this);
+        btDone.setOnClickListener(this);
     }
 
     public void setStickerTextView(Context context, StickerTextView stickerTextView) {
@@ -119,6 +111,41 @@ public class TextEditorFragment extends Fragment {
 
     public void setTextEditorDismissListener(TextEditorDismissListener textEditorDismissListener) {
         this.mTextEditorDismissListener = textEditorDismissListener;
+    }
+
+    @Override
+    public void onClick(View v) {
+        int i = v.getId();
+        if (i == R.id.btFont) {
+            mStickerTextView.setFontTypeFace(FontUtils.getNextFont(mContext));
+        } else if (i == R.id.btBold) {
+            if (!mStickerTextView.isBold()) {
+                mStickerTextView.setBold(true);
+            } else {
+                mStickerTextView.setBold(false);
+            }
+
+            btBold.setImageResource(mStickerTextView.isBold() ? R.drawable.ic_bold : R.drawable.ic_bold_grey);
+        } else if (i == R.id.btItalic) {
+            if (!mStickerTextView.isItalic()) {
+                mStickerTextView.setItalic(true);
+            } else {
+                mStickerTextView.setItalic(false);
+            }
+
+            btItalic.setImageResource(mStickerTextView.isItalic() ? R.drawable.ic_italic : R.drawable.ic_italic_grey);
+        } else if (i == R.id.btUnderline) {
+            if (!mStickerTextView.isUnderline()) {
+                mStickerTextView.setUnderline(true);
+            } else {
+                mStickerTextView.setUnderline(false);
+            }
+
+            btUnderline.setImageResource(mStickerTextView.isUnderline() ? R.drawable.ic_underline : R.drawable.ic_underline_grey);
+        } else if (i == R.id.btDone) {
+            mStickerTextView.setText(etTextEditor.getText().toString().trim());
+            mTextEditorDismissListener.textEditorDismissed();
+        }
     }
 
     interface TextEditorDismissListener {
