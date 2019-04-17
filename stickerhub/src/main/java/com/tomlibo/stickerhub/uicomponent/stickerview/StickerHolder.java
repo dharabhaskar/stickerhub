@@ -29,7 +29,6 @@ public class StickerHolder extends FrameLayout {
     private FrameLayout innerStickerHolder;
     private AppCompatImageView backgroundImageView;
     private StickerTextView currentStickerTextView;
-    private TextEditorFragment textEditorFragment;
 
     public StickerHolder(Context context) {
         super(context);
@@ -66,14 +65,6 @@ public class StickerHolder extends FrameLayout {
 
         innerStickerHolder.setTag("StickerHolder");
         innerStickerHolder.setOnTouchListener(mOnTouchListener);
-
-        textEditorFragment = new TextEditorFragment();
-        textEditorFragment.setTextEditorDismissListener(new TextEditorFragment.TextEditorDismissListener() {
-            @Override
-            public void textEditorDismissed() {
-                textEditorControlVisibility(false);
-            }
-        });
     }
 
     private OnTouchListener mOnTouchListener = new OnTouchListener() {
@@ -164,14 +155,22 @@ public class StickerHolder extends FrameLayout {
     }
 
     public void textEditorControlVisibility(boolean visible) {
-        textEditorFragment.setStickerTextView(mContext, currentStickerTextView);
-
         if (visible) {
+            TextEditorFragment textEditorFragment = new TextEditorFragment();
+            textEditorFragment.setStickerTextView(mContext, currentStickerTextView);
+
             rootView.findViewById(R.id.flContainerTextEditor).setVisibility(VISIBLE);
 
             ((AppCompatActivity) mContext).getSupportFragmentManager().beginTransaction()
                     .replace(R.id.flContainerTextEditor, textEditorFragment)
                     .commit();
+
+            textEditorFragment.setTextEditorDismissListener(new TextEditorFragment.TextEditorDismissListener() {
+                @Override
+                public void textEditorDismissed() {
+                    textEditorControlVisibility(false);
+                }
+            });
         } else {
             rootView.findViewById(R.id.flContainerTextEditor).setVisibility(GONE);
         }
