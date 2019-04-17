@@ -111,9 +111,35 @@ public class StickerHolder extends FrameLayout {
         hideControlsOfAllChildStickerView();
 
         StickerFrameView stickerFrameView = new StickerFrameView(mContext);
+        stickerFrameView.setTag("frame");
         stickerFrameView.setImageDrawable(new BitmapDrawable(getResources(), bitmap));
 
-        if (innerStickerHolder.getChildAt(0) instanceof StickerFrameView) {
+        int position;
+
+        if (innerStickerHolder.getChildAt(0) != null
+                && innerStickerHolder.getChildAt(0).getTag().equals("overlay")) {
+            position = 1;
+        } else {
+            position = 0;
+        }
+
+        if (innerStickerHolder.getChildAt(position) instanceof StickerFrameView
+                && innerStickerHolder.getChildAt(0).getTag().equals("frame")) {
+            innerStickerHolder.removeViewAt(position);
+        }
+
+        innerStickerHolder.addView(stickerFrameView, position);
+    }
+
+    public void addOverlay(Bitmap bitmap) {
+        hideControlsOfAllChildStickerView();
+
+        StickerFrameView stickerFrameView = new StickerFrameView(mContext);
+        stickerFrameView.setTag("overlay");
+        stickerFrameView.setImageDrawable(new BitmapDrawable(getResources(), bitmap));
+
+        if (innerStickerHolder.getChildAt(0) instanceof StickerFrameView
+                && innerStickerHolder.getChildAt(0).getTag().equals("overlay")) {
             innerStickerHolder.removeViewAt(0);
         }
 

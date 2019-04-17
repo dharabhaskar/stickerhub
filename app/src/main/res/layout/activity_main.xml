@@ -23,32 +23,52 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:padding="8dp"
-        android:weightSum="3">
+        android:orientation="vertical"
+        android:padding="8dp">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btSticker"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Sticker" />
+            android:weightSum="2">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btFrame"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_weight="1"
-            android:text="Frame" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btSticker"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Sticker" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btText"
-            android:layout_width="0dp"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:text="Text" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_weight="1"
-            android:text="Text" />
+            android:weightSum="2">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btFrame"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Frame" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btOverLay"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:text="Layer" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
