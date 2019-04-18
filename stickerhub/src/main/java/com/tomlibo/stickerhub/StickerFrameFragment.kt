@@ -10,8 +10,13 @@ import com.tomlibo.stickerhub.adapter.StickerAdapter
 import com.tomlibo.stickerhub.listener.FrameClickListener
 import com.tomlibo.stickerhub.uicomponent.GridSpacingItemDecoration
 import com.tomlibo.stickerhub.util.RecyclerItemClickListener
+import com.tomlibo.stickerhub.util.StickerDataReader
 import kotlinx.android.synthetic.main.fragment_sticker_gallery.*
 import java.util.*
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
+
+
 
 class StickerFrameFragment : Fragment() {
 
@@ -33,11 +38,9 @@ class StickerFrameFragment : Fragment() {
 
         //load all frames
         addFrames()
-
         rcvSticker.layoutManager = GridLayoutManager(context, 3)
         rcvSticker.addItemDecoration(GridSpacingItemDecoration(3, 4, false))
         rcvSticker.adapter = StickerAdapter(requireContext(), stickerList)
-
         rcvSticker.addOnItemTouchListener(RecyclerItemClickListener(context, object : RecyclerItemClickListener.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 if (context is FrameClickListener) {
@@ -59,5 +62,6 @@ class StickerFrameFragment : Fragment() {
         stickerList.add("https://github.com/iQueSoft/iQuePhoto/blob/master/iQuePhoto/app/src/main/res/drawable-nodpi/frame_grunge_04.png?raw=true")
         stickerList.add("https://github.com/iQueSoft/iQuePhoto/blob/master/iQuePhoto/app/src/main/res/drawable-nodpi/frame_h_01.png?raw=true")
         stickerList.add("http://img.tomlibo.com/app/stiker/frame/frame.9.png")
+        //stickerList.addAll(StickerDataReader.getFrames(activity))
     }
 }

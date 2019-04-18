@@ -10,6 +10,7 @@ import com.tomlibo.stickerhub.adapter.OverlayAdapter
 import com.tomlibo.stickerhub.listener.OverlayClickListener
 import com.tomlibo.stickerhub.uicomponent.GridSpacingItemDecoration
 import com.tomlibo.stickerhub.util.RecyclerItemClickListener
+import com.tomlibo.stickerhub.util.StickerDataReader
 import kotlinx.android.synthetic.main.fragment_sticker_gallery.*
 import java.util.*
 
@@ -79,5 +80,7 @@ class StickerOverlayFragment : Fragment() {
         stickerList.add("https://github.com/mnafian/ImageEffectFilter/blob/master/app/src/main/res/drawable/wall11box.png?raw=true")
         stickerList.add("https://github.com/mnafian/ImageEffectFilter/blob/master/app/src/main/res/drawable/wall12box.png?raw=true")
         stickerList.add("https://github.com/mnafian/ImageEffectFilter/blob/master/app/src/main/res/drawable/wall12box.png?raw=true")
+
+        //stickerList.addAll(StickerDataReader.getOverlays(activity))
     }
 }

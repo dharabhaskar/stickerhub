@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity(), StickerClickListener, FrameClickListen
         stickerOverlayBottomSheet.setOverlayClickListener(this)
     }
 
-    override fun onSelectedSticker(url: String) {
+    override fun onSelectedSticker(url: String?) {
         stickerGalleryBottomSheet.dismiss()
 
         Glide.with(this)
