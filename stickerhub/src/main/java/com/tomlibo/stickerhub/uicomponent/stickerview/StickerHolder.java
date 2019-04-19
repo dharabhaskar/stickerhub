@@ -29,6 +29,9 @@ public class StickerHolder extends FrameLayout {
     private FrameLayout innerStickerHolder;
     private AppCompatImageView backgroundImageView;
     private StickerTextView currentStickerTextView;
+    private StickerDrawView currentStickerDrawView;
+    private boolean isDrawing;
+
     private OnTouchListener mOnTouchListener = new OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent event) {
@@ -88,6 +91,7 @@ public class StickerHolder extends FrameLayout {
         }
 
         textEditorControlVisibility(false);
+        drawingToolsControlVisibility(false);
     }
 
     public ImageView getBackgroundImageView() {
@@ -175,22 +179,46 @@ public class StickerHolder extends FrameLayout {
     }
 
     public void addDrawView() {
+        if (isDrawing)
+            return;
+
         hideControlsOfAllChildStickerView();
 
-        StickerDrawView stickerDrawView = new StickerDrawView(mContext);
-        innerStickerHolder.addView(stickerDrawView);
+        currentStickerDrawView = new StickerDrawView(mContext);
+        innerStickerHolder.addView(currentStickerDrawView);
 
-        stickerDrawView.setDrawingDoneClickListener(new StickerDrawView.DrawingDoneClickListener() {
+        currentStickerDrawView.setDrawingDoneClickListener(new StickerDrawView.DrawingDoneClickListener() {
             @Override
             public void onDoneClicked() {
                 hideControlsOfAllChildStickerView();
             }
         });
+
+        currentStickerDrawView.setStickerDeleteListener(new StickerView.StickerDeleteListener() {
+            @Override
+            public void onStickerRemoved() {
+                drawingToolsControlVisibility(false);
+            }
+        });
+
+        drawingToolsControlVisibility(true);
     }
 
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
+    public void drawingToolsControlVisibility(boolean visible) {
+        if (visible) {
+            DrawingToolsFragment drawingToolsFragment = new DrawingToolsFragment();
+
+            rootView.findViewById(R.id.flContainerTool).setVisibility(VISIBLE);
+
+            ((AppCompatActivity) mContext).getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.flContainerTool, drawingToolsFragment)
+                    .commit();
+
+            isDrawing = true;
+        } else {
+            rootView.findViewById(R.id.flContainerTool).setVisibility(GONE);
+            isDrawing = false;
+        }
     }
 
     public void textEditorControlVisibility(boolean visible) {
@@ -198,10 +226,10 @@ public class StickerHolder extends FrameLayout {
             TextEditorFragment textEditorFragment = new TextEditorFragment();
             textEditorFragment.setStickerTextView(mContext, currentStickerTextView);
 
-            rootView.findViewById(R.id.flContainerTextEditor).setVisibility(VISIBLE);
+            rootView.findViewById(R.id.flContainerTool).setVisibility(VISIBLE);
 
             ((AppCompatActivity) mContext).getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.flContainerTextEditor, textEditorFragment)
+                    .replace(R.id.flContainerTool, textEditorFragment)
                     .commit();
 
             textEditorFragment.setTextEditorDismissListener(new TextEditorFragment.TextEditorDismissListener() {
@@ -211,7 +239,7 @@ public class StickerHolder extends FrameLayout {
                 }
             });
         } else {
-            rootView.findViewById(R.id.flContainerTextEditor).setVisibility(GONE);
+            rootView.findViewById(R.id.flContainerTool).setVisibility(GONE);
         }
     }
 
@@ -231,5 +259,10 @@ public class StickerHolder extends FrameLayout {
                         currentStickerTextView.setTextColor(color);
                     }
                 });
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
     }
 }
