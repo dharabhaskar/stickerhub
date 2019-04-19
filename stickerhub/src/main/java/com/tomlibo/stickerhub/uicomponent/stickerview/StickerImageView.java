@@ -45,6 +45,9 @@ public class StickerImageView extends StickerView {
         if (getImageViewColorPalette() != null)
             getImageViewColorPalette().setVisibility(View.GONE);
 
+        if (getImageViewDone() != null)
+            getImageViewDone().setVisibility(View.GONE);
+
         if (getImageViewTextEditor() != null)
             getImageViewTextEditor().setVisibility(View.GONE);
 

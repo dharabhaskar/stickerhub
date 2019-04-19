@@ -71,17 +71,20 @@ public class StickerFrameView extends StickerView {
             this.iv_main.setScaleType(ImageView.ScaleType.FIT_XY);
         }
 
+        if (getImageViewExpand() != null)
+            getImageViewExpand().setVisibility(View.GONE);
+
         if (getImageViewFlip() != null)
             getImageViewFlip().setVisibility(View.GONE);
 
         if (getImageViewColorPalette() != null)
             getImageViewColorPalette().setVisibility(View.GONE);
 
+        if (getImageViewDone() != null)
+            getImageViewDone().setVisibility(View.GONE);
+
         if (getImageViewTextEditor() != null)
             getImageViewTextEditor().setVisibility(View.GONE);
-
-        if (getImageViewExpane() != null)
-            getImageViewExpane().setVisibility(View.GONE);
 
         return iv_main;
     }

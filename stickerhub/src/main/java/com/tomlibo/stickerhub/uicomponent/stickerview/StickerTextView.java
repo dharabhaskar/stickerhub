@@ -33,6 +33,11 @@ public class StickerTextView extends StickerView {
         super(context, attrs, defStyle);
     }
 
+    public static float pixelsToSp(Context context, float px) {
+        float scaledDensity = context.getResources().getDisplayMetrics().scaledDensity;
+        return px / scaledDensity;
+    }
+
     @Override
     public View getMainView() {
         if (tv_main != null)
@@ -54,6 +59,9 @@ public class StickerTextView extends StickerView {
         if (getImageViewFlip() != null)
             getImageViewFlip().setVisibility(View.GONE);
 
+        if (getImageViewDone() != null)
+            getImageViewDone().setVisibility(View.GONE);
+
         if (getImageViewColorPalette() != null) {
             getImageViewColorPalette().setOnClickListener(new OnClickListener() {
                 @Override
@@ -71,6 +79,7 @@ public class StickerTextView extends StickerView {
                 }
             });
         }
+
         return tv_main;
     }
 
@@ -158,11 +167,6 @@ public class StickerTextView extends StickerView {
     @Override
     protected void onScaling(boolean scaleUp) {
         super.onScaling(scaleUp);
-    }
-
-    public static float pixelsToSp(Context context, float px) {
-        float scaledDensity = context.getResources().getDisplayMetrics().scaledDensity;
-        return px / scaledDensity;
     }
 
     public void setTextStickerClickListener(TextStickerClickListener textStickerClickListener) {

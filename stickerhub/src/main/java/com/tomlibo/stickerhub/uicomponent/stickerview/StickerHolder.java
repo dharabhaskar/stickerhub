@@ -13,12 +13,12 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatImageView;
+
 import com.tomlibo.stickerhub.R;
 import com.tomlibo.stickerhub.uicomponent.colorpicker.ColorPickerDialog;
 import com.tomlibo.stickerhub.util.Utils;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatImageView;
 
 public class StickerHolder extends FrameLayout {
 
@@ -29,6 +29,18 @@ public class StickerHolder extends FrameLayout {
     private FrameLayout innerStickerHolder;
     private AppCompatImageView backgroundImageView;
     private StickerTextView currentStickerTextView;
+    private OnTouchListener mOnTouchListener = new OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent event) {
+            if (view.getTag().equals("StickerHolder")) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        hideControlsOfAllChildStickerView();
+                }
+            }
+            return true;
+        }
+    };
 
     public StickerHolder(Context context) {
         super(context);
@@ -66,19 +78,6 @@ public class StickerHolder extends FrameLayout {
         innerStickerHolder.setTag("StickerHolder");
         innerStickerHolder.setOnTouchListener(mOnTouchListener);
     }
-
-    private OnTouchListener mOnTouchListener = new OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent event) {
-            if (view.getTag().equals("StickerHolder")) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        hideControlsOfAllChildStickerView();
-                }
-            }
-            return true;
-        }
-    };
 
     public void hideControlsOfAllChildStickerView() {
         for (int i = 0; i < innerStickerHolder.getChildCount(); i++) {
@@ -171,6 +170,20 @@ public class StickerHolder extends FrameLayout {
             @Override
             public void onStickerRemoved() {
                 textEditorControlVisibility(false);
+            }
+        });
+    }
+
+    public void addDrawView() {
+        hideControlsOfAllChildStickerView();
+
+        StickerDrawView stickerDrawView = new StickerDrawView(mContext);
+        innerStickerHolder.addView(stickerDrawView);
+
+        stickerDrawView.setDrawingDoneClickListener(new StickerDrawView.DrawingDoneClickListener() {
+            @Override
+            public void onDoneClicked() {
+                hideControlsOfAllChildStickerView();
             }
         });
     }

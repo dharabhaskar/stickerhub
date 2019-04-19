@@ -48,6 +48,10 @@ class MainActivity : AppCompatActivity(), StickerClickListener, FrameClickListen
             stickerHolder.addTextSticker()
         }
 
+        btDrawing.setOnClickListener { v ->
+            stickerHolder.addDrawView()
+        }
+
         stickerGalleryBottomSheet.setStickerClickListener(this)
         stickerFrameBottomSheet.setFrameClickListener(this)
         stickerOverlayBottomSheet.setOverlayClickListener(this)

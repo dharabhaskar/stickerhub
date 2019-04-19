@@ -9,17 +9,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.tomlibo.stickerhub.R;
-import com.tomlibo.stickerhub.util.FontUtils;
-
-import java.util.Timer;
-import java.util.TimerTask;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.fragment.app.Fragment;
+
+import com.tomlibo.stickerhub.R;
+import com.tomlibo.stickerhub.util.FontUtils;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class TextEditorFragment extends Fragment implements View.OnClickListener {
 
