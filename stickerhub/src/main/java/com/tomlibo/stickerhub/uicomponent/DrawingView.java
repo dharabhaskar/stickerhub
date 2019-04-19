@@ -19,6 +19,7 @@ public class DrawingView extends View {
     private Paint mDrawPaint;
     private Canvas mDrawCanvas;
     private Bitmap mCanvasBitmap;
+    private boolean touchable;
 
     private ArrayList<Path> mPaths = new ArrayList<>();
     private ArrayList<Paint> mPaints = new ArrayList<>();
@@ -41,6 +42,7 @@ public class DrawingView extends View {
     }
 
     private void init() {
+        touchable=true;
         mDrawPath = new Path();
         mBackgroundPaint = new Paint();
         initPaint();
@@ -70,6 +72,14 @@ public class DrawingView extends View {
         }
     }
 
+    public boolean isTouchable() {
+        return touchable;
+    }
+
+    public void setTouchable(boolean touchable) {
+        this.touchable = touchable;
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         drawBackground(canvas);
@@ -89,6 +99,8 @@ public class DrawingView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if(!touchable) return false;
+
         float touchX = event.getX();
         float touchY = event.getY();
 
@@ -160,9 +172,5 @@ public class DrawingView extends View {
             mPaints.add(mUndonePaints.remove(mUndonePaints.size() - 1));
             invalidate();
         }
-    }
-
-    public void stopDrawing() {
-
     }
 }

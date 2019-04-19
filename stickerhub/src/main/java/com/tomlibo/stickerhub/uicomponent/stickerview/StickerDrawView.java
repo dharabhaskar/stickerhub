@@ -77,8 +77,7 @@ public class StickerDrawView extends StickerView {
                 @Override
                 public void onClick(View v) {
                     mDrawingDoneClickListener.onDoneClicked();
-
-                    drawingView.stopDrawing();
+                    drawingView.setTouchable(false);
                 }
             });
         }
@@ -91,8 +90,6 @@ public class StickerDrawView extends StickerView {
         super.changeControlVisibility(visible);
         iv_delete.setVisibility(visible ? VISIBLE : GONE);
         iv_done.setVisibility(visible ? VISIBLE : GONE);
-
-        drawingView.stopDrawing();
     }
 
     public void setDrawingDoneClickListener(DrawingDoneClickListener drawingDoneClickListener) {
