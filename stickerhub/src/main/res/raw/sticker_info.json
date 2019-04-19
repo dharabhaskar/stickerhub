@@ -3,35 +3,47 @@
         "id": 1,
         "name": "Happy",
         "start": 1,
-        "end": 10
+        "end": 20
     },
     {
         "id": 2,
         "name": "In Love",
         "start": 1,
-        "end": 10
+        "end": 20
     },
     {
-        "id": 1,
+        "id": 3,
+        "name": "Confused",
+        "start": 1,
+        "end": 19
+    },
+    {
+        "id": 4,
         "name": "Working",
         "start": 1,
-        "end": 10
+        "end": 20
     },
     {
-        "id": 1,
+        "id": 5,
         "name": "Active",
         "start": 1,
-        "end": 10
+        "end": 20
     },
     {
-        "id": 1,
-        "name": "Frame",
+        "id": 6,
+        "name": "Sad",
         "start": 1,
-        "end": 10
+        "end": 20
     },
     {
-        "id": 1,
-        "name": "Overlay",
+        "id": 7,
+        "name": "Frames",
+        "start": 1,
+        "end": 20
+    },
+    {
+        "id": 8,
+        "name": "Overlays",
         "start": 1,
         "end": 10
     }

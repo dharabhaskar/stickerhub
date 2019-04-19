@@ -67,7 +67,7 @@ class StickerOverlayFragment : Fragment() {
     }
 
     private fun addOverLays() {
-        stickerList.add("https://github.com/mnafian/ImageEffectFilter/blob/master/app/src/main/res/drawable/wall1box.png?raw=true")
+        /*stickerList.add("https://github.com/mnafian/ImageEffectFilter/blob/master/app/src/main/res/drawable/wall1box.png?raw=true")
         stickerList.add("https://github.com/mnafian/ImageEffectFilter/blob/master/app/src/main/res/drawable/wall2box.png?raw=true")
         stickerList.add("https://github.com/mnafian/ImageEffectFilter/blob/master/app/src/main/res/drawable/wall3box.png?raw=true")
         stickerList.add("https://github.com/mnafian/ImageEffectFilter/blob/master/app/src/main/res/drawable/wall4box.png?raw=true")
@@ -79,8 +79,8 @@ class StickerOverlayFragment : Fragment() {
         stickerList.add("https://github.com/mnafian/ImageEffectFilter/blob/master/app/src/main/res/drawable/wall10box.png?raw=true")
         stickerList.add("https://github.com/mnafian/ImageEffectFilter/blob/master/app/src/main/res/drawable/wall11box.png?raw=true")
         stickerList.add("https://github.com/mnafian/ImageEffectFilter/blob/master/app/src/main/res/drawable/wall12box.png?raw=true")
-        stickerList.add("https://github.com/mnafian/ImageEffectFilter/blob/master/app/src/main/res/drawable/wall12box.png?raw=true")
+        stickerList.add("https://github.com/mnafian/ImageEffectFilter/blob/master/app/src/main/res/drawable/wall12box.png?raw=true")*/
 
-        //stickerList.addAll(StickerDataReader.getOverlays(activity))
+        stickerList.addAll(StickerDataReader.getOverlays(activity))
     }
 }

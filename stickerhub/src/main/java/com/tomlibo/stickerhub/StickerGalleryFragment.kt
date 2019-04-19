@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.tomlibo.stickerhub.adapter.StickerAdapter
 import com.tomlibo.stickerhub.adapter.StickerCategoryAdapter
 import com.tomlibo.stickerhub.listener.StickerClickListener
+import com.tomlibo.stickerhub.model.StickerInfo
 import com.tomlibo.stickerhub.uicomponent.GridSpacingItemDecoration
 import com.tomlibo.stickerhub.util.RecyclerItemClickListener
 import com.tomlibo.stickerhub.util.StickerDataReader
@@ -19,8 +20,8 @@ class StickerGalleryFragment : Fragment() {
 
     private val stickerList: ArrayList<String> = ArrayList()
     private var stickerClickListener: StickerClickListener? = null
-    private var categoryAdapter: StickerCategoryAdapter? = null
-    private var stickerAdapter: StickerAdapter? = null
+    private var categoryAdapter: StickerCategoryAdapter?=null
+    private var stickerAdapter: StickerAdapter?=null
 
     companion object {
         fun newInstance(): StickerGalleryFragment {
@@ -34,7 +35,7 @@ class StickerGalleryFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        categoryAdapter = StickerCategoryAdapter(requireContext(), ArrayList(StickerDataReader.getAllCategoryThumbs(context)))
+        categoryAdapter = StickerCategoryAdapter(requireContext(), ArrayList(StickerDataReader.getOnlyStickers(context)))
         stickerAdapter = StickerAdapter(requireContext(), ArrayList())
     }
 
@@ -46,8 +47,9 @@ class StickerGalleryFragment : Fragment() {
         rcvCategory.adapter = categoryAdapter
 
         rcvCategory.addOnItemTouchListener(RecyclerItemClickListener(context, RecyclerItemClickListener.OnItemClickListener { v, position ->
-            val stickerInfo = StickerDataReader.getStickerInfoByIndex(context, position)
-            stickerAdapter?.replaceItems(stickerInfo.stickerUrlList)
+            categoryAdapter?.updateSelection(position)
+            val stickerInfo = categoryAdapter?.getItem(position)
+            stickerAdapter?.replaceItems(stickerInfo?.stickerUrlList as List<String>)
         }))
 
         //load all stickers

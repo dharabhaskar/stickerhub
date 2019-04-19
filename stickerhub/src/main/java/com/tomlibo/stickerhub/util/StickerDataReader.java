@@ -30,7 +30,7 @@ public class StickerDataReader {
         }.getType());
     }
 
-    private static List<StickerInfo> getOnlyStickers(Context context) throws IOException {
+    public static List<StickerInfo> getOnlyStickers(Context context) throws IOException {
         List<StickerInfo> stickerInfoList=new ArrayList<>();
          for(StickerInfo stickerInfo:getStickerData(context)){
              if(stickerInfo.getFormattedTitle().contains("frame")) continue;
@@ -42,7 +42,7 @@ public class StickerDataReader {
 
     public static List<String> getStickersByCategory(Context context, String categoryTitle) throws IOException {
         for(StickerInfo stickerInfo:getStickerData(context)){
-            if(stickerInfo.getCategoryTitle().contains(categoryTitle)){
+            if(stickerInfo.getFormattedTitle().contains(categoryTitle)){
                 return stickerInfo.getStickerUrlList();
             }
         }
@@ -81,7 +81,7 @@ public class StickerDataReader {
     }
 
     public static List<String> getFrames(Context context) throws IOException {
-        return getStickersByCategory(context,"frame");
+        return getStickersByCategory(context,"frames");
     }
 
     public static List<String> getOverlays(Context context) throws IOException {

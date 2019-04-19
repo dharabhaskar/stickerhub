@@ -13,6 +13,7 @@ public class StickerInfo {
     private int end;
     @SerializedName("name")
     private String categoryTitle;
+    boolean selected;
 
     public String getThumbUrl(){
         return  String.format("%s/%s/%s.png", Constants.STICKER_BASE_URL,getFormattedTitle(),getFormattedTitle());
@@ -41,6 +42,14 @@ public class StickerInfo {
 
     public void setEnd(int end) {
         this.end = end;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 
     public String getCategoryTitle() {
