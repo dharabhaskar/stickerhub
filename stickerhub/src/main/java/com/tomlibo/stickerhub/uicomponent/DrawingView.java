@@ -42,7 +42,7 @@ public class DrawingView extends View {
     }
 
     private void init() {
-        touchable=true;
+        touchable = true;
         mDrawPath = new Path();
         mBackgroundPaint = new Paint();
         initPaint();
@@ -99,7 +99,7 @@ public class DrawingView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if(!touchable) return false;
+        if (!touchable) return false;
 
         float touchX = event.getX();
         float touchY = event.getY();
