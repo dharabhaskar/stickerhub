@@ -87,6 +87,10 @@ public class StickerHolder extends FrameLayout {
             View view = innerStickerHolder.getChildAt(i);
             if (view instanceof StickerView && !(view instanceof StickerFrameView)) {
                 ((StickerView) view).hideControls();
+
+                if (view instanceof StickerDrawView) {
+                    ((StickerDrawView) view).stopDrawing();
+                }
             }
         }
 
@@ -207,6 +211,7 @@ public class StickerHolder extends FrameLayout {
     public void drawingToolsControlVisibility(boolean visible) {
         if (visible) {
             DrawingToolsFragment drawingToolsFragment = new DrawingToolsFragment();
+            drawingToolsFragment.setStickerDrawView(mContext, currentStickerDrawView);
 
             rootView.findViewById(R.id.flContainerTool).setVisibility(VISIBLE);
 

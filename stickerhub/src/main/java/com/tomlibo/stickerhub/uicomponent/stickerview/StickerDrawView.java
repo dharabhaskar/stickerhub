@@ -6,6 +6,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.tomlibo.stickerhub.R;
 import com.tomlibo.stickerhub.uicomponent.DrawingView;
 
 public class StickerDrawView extends StickerView {
@@ -59,6 +60,7 @@ public class StickerDrawView extends StickerView {
 
         drawingView = new DrawingView(getContext());
         drawingView.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+        drawingView.setPaintColor(getResources().getColor(R.color.red));
 
         if (getImageViewExpand() != null)
             getImageViewExpand().setVisibility(View.GONE);
@@ -90,6 +92,26 @@ public class StickerDrawView extends StickerView {
         super.changeControlVisibility(visible);
         iv_delete.setVisibility(visible ? VISIBLE : GONE);
         iv_done.setVisibility(visible ? VISIBLE : GONE);
+    }
+
+    public void setPaintColor(int color) {
+        drawingView.setPaintColor(color);
+    }
+
+    public void setPaintStrokeWidth(int strokeWidth) {
+        drawingView.setPaintStrokeWidth(strokeWidth);
+    }
+
+    public void undo() {
+        drawingView.undo();
+    }
+
+    public void redo() {
+        drawingView.redo();
+    }
+
+    public void stopDrawing() {
+        drawingView.setTouchable(false);
     }
 
     public void setDrawingDoneClickListener(DrawingDoneClickListener drawingDoneClickListener) {

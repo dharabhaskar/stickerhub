@@ -19,9 +19,9 @@
             android:id="@+id/colorIndicator"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:background="?android:selectableItemBackgroundBorderless"
+            app:cv_backgroundColorValue="@color/white"
             app:cv_fillRadius="0"
-            app:cv_strokeColorValue="@android:color/black"
+            app:cv_strokeColorValue="@color/black"
             app:cv_strokeWidthSize="2" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -37,7 +37,7 @@
             android:orientation="horizontal">
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/btUndo"
+                android:id="@+id/tvUndo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="?android:selectableItemBackgroundBorderless"
@@ -46,7 +46,7 @@
                 android:text="Undo" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/btRedo"
+                android:id="@+id/tvRedo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -60,13 +60,15 @@
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvBrushSize"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
         android:text="Brush Size" />
 
     <androidx.appcompat.widget.AppCompatSeekBar
-        android:id="@+id/fragment_dialog_stroke_selector_sb"
+        android:id="@+id/sbStrokeSize"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp" />
