@@ -16,8 +16,6 @@ import java.util.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 
-
-
 class StickerFrameFragment : Fragment() {
 
     private val stickerList: ArrayList<String> = ArrayList()

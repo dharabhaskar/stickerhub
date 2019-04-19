@@ -7,13 +7,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.tomlibo.stickerhub.R
-import kotlinx.android.synthetic.main.list_item_sticker.view.*
+import kotlinx.android.synthetic.main.list_item_sticker.view.ivSticker
+import kotlinx.android.synthetic.main.list_item_sticker_category.view.*
 import java.util.*
 
-class StickerAdapter(private val context: Context, private val items: ArrayList<String>) : RecyclerView.Adapter<StickerAdapter.StickerViewHolder>() {
+class StickerCategoryAdapter(private val context: Context, private val items: ArrayList<String>) : RecyclerView.Adapter<StickerCategoryAdapter.StickerViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StickerViewHolder {
-        return StickerViewHolder(LayoutInflater.from(context).inflate(R.layout.list_item_sticker, parent, false))
+        return StickerViewHolder(LayoutInflater.from(context).inflate(R.layout.list_item_sticker_category, parent, false))
     }
 
     override fun getItemCount(): Int {
@@ -38,5 +39,6 @@ class StickerAdapter(private val context: Context, private val items: ArrayList<
 
     class StickerViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val ivSticker = view.ivSticker
+        val flBorder = view.flBorder
     }
 }
