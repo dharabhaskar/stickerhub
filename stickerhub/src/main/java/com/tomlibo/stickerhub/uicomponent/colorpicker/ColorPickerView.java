@@ -7,12 +7,12 @@ import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import androidx.annotation.Nullable;
+
 import com.tomlibo.stickerhub.R;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.annotation.Nullable;
 
 public class ColorPickerView extends LinearLayout implements ColorObservable {
 

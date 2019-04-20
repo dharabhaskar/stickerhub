@@ -7,11 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
+
 import com.tomlibo.stickerhub.R;
 
 import java.util.Locale;
-
-import androidx.appcompat.app.AlertDialog;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 

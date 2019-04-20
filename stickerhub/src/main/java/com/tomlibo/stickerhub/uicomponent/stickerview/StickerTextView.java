@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import com.tomlibo.stickerhub.uicomponent.stickerview.util.AutoResizeTextView;
+import com.tomlibo.stickerhub.uicomponent.AutoResizeTextView;
 
 public class StickerTextView extends StickerView {
 

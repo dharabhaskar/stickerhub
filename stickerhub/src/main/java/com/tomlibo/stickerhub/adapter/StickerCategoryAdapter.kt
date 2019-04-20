@@ -15,9 +15,10 @@ import kotlinx.android.synthetic.main.list_item_sticker_category.view.*
 import java.util.*
 
 class StickerCategoryAdapter(private val context: Context, private val items: ArrayList<StickerInfo>) : RecyclerView.Adapter<StickerCategoryAdapter.StickerViewHolder>() {
-    private var lastSelection=0;
+    private var lastSelection = 0;
+
     init {
-        if(items.size>0) {
+        if (items.size > 0) {
             items[lastSelection].isSelected = true
         }
     }
@@ -34,15 +35,15 @@ class StickerCategoryAdapter(private val context: Context, private val items: Ar
         Glide.with(context)
                 .load(items[position].thumbUrl)
                 .into(holder.ivSticker)
-        holder.flBorder.visibility=if(items[position].isSelected) View.VISIBLE else View.GONE
+        holder.flBorder.visibility = if (items[position].isSelected) View.VISIBLE else View.GONE
     }
 
 
-    fun updateSelection(positon:Int){
-        items[lastSelection].isSelected=false
-        items[positon].isSelected=true
+    fun updateSelection(positon: Int) {
+        items[lastSelection].isSelected = false
+        items[positon].isSelected = true
 
-        lastSelection=positon
+        lastSelection = positon
         notifyDataSetChanged()
     }
 

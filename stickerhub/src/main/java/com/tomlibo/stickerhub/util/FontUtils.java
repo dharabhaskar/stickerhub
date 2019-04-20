@@ -3,12 +3,12 @@ package com.tomlibo.stickerhub.util;
 import android.content.Context;
 import android.graphics.Typeface;
 
+import androidx.core.content.res.ResourcesCompat;
+
 import com.tomlibo.stickerhub.R;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.core.content.res.ResourcesCompat;
 
 public class FontUtils {
 

@@ -94,10 +94,6 @@ public class StickerFrameView extends StickerView {
     }
 
     public void setImageDrawable(Drawable drawable) {
-        if (getTag().equals("overlay")) {
-            iv_main.setAlpha((float) 0.5);
-        }
-
         this.iv_main.setImageDrawable(drawable);
     }
 

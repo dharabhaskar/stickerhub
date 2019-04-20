@@ -9,20 +9,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StickerInfo {
+    boolean selected;
     private int start;
     private int end;
     @SerializedName("name")
     private String categoryTitle;
-    boolean selected;
 
-    public String getThumbUrl(){
-        return  String.format("%s/%s/%s.png", Constants.STICKER_BASE_URL,getFormattedTitle(),getFormattedTitle());
+    public String getThumbUrl() {
+        return String.format("%s/%s/%s.png", Constants.STICKER_BASE_URL, getFormattedTitle(), getFormattedTitle());
     }
+
     @SuppressLint("DefaultLocale")
-    public List<String> getStickerUrlList(){
-        List<String> urlList=new ArrayList<>();
-        for (int i=start;i<end;i++){
-            String url=String.format("%s/%s/%d.png",Constants.STICKER_BASE_URL,getFormattedTitle(),i);
+    public List<String> getStickerUrlList() {
+        List<String> urlList = new ArrayList<>();
+        for (int i = start; i < end; i++) {
+            String url = String.format("%s/%s/%d.png", Constants.STICKER_BASE_URL, getFormattedTitle(), i);
             urlList.add(url);
         }
         return urlList;
@@ -56,11 +57,11 @@ public class StickerInfo {
         return categoryTitle;
     }
 
-    public String getFormattedTitle(){
-        return categoryTitle.replaceAll(" ","-").toLowerCase();
-    }
-
     public void setCategoryTitle(String categoryTitle) {
         this.categoryTitle = categoryTitle;
+    }
+
+    public String getFormattedTitle() {
+        return categoryTitle.replaceAll(" ", "-").toLowerCase();
     }
 }

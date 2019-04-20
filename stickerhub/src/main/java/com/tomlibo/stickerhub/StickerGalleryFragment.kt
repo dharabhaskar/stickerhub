@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.tomlibo.stickerhub.adapter.StickerAdapter
 import com.tomlibo.stickerhub.adapter.StickerCategoryAdapter
 import com.tomlibo.stickerhub.listener.StickerClickListener
-import com.tomlibo.stickerhub.model.StickerInfo
 import com.tomlibo.stickerhub.uicomponent.GridSpacingItemDecoration
 import com.tomlibo.stickerhub.util.RecyclerItemClickListener
 import com.tomlibo.stickerhub.util.StickerDataReader
@@ -20,8 +19,8 @@ class StickerGalleryFragment : Fragment() {
 
     private val stickerList: ArrayList<String> = ArrayList()
     private var stickerClickListener: StickerClickListener? = null
-    private var categoryAdapter: StickerCategoryAdapter?=null
-    private var stickerAdapter: StickerAdapter?=null
+    private var categoryAdapter: StickerCategoryAdapter? = null
+    private var stickerAdapter: StickerAdapter? = null
 
     companion object {
         fun newInstance(): StickerGalleryFragment {

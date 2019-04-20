@@ -13,8 +13,6 @@ import com.tomlibo.stickerhub.util.RecyclerItemClickListener
 import com.tomlibo.stickerhub.util.StickerDataReader
 import kotlinx.android.synthetic.main.fragment_sticker_gallery.*
 import java.util.*
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 
 class StickerFrameFragment : Fragment() {
 

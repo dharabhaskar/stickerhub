@@ -1,4 +1,4 @@
-package com.tomlibo.stickerhub.uicomponent.stickerview.util
+package com.tomlibo.stickerhub.uicomponent
 
 import android.annotation.TargetApi
 import android.content.Context

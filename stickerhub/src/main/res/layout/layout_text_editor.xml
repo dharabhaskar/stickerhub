@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:background="?android:selectableItemBackgroundBorderless"
             android:padding="4dp"
-            android:src="@drawable/ic_font" />
+            android:src="@drawable/ic_font_face" />
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/btBold"
