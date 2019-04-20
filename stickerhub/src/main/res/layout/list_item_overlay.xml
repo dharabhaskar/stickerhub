@@ -26,7 +26,8 @@
             android:layout_alignTop="@+id/ivMain"
             android:layout_alignEnd="@+id/ivMain"
             android:layout_alignBottom="@+id/ivMain"
-            android:adjustViewBounds="true" />
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY" />
 
     </RelativeLayout>
 
