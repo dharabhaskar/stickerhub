@@ -31,8 +31,7 @@ public class StickerHolder extends FrameLayout {
     private AppCompatImageView backgroundImageView;
     private StickerTextView currentStickerTextView;
     private StickerDrawView currentStickerDrawView;
-    private StickerFrameView currentStickerOverlayView;
-    private boolean isOverlay;
+    private OverlayStickerView currentOverlayStickerView;
     private boolean isDrawing;
 
     private OnTouchListener mOnTouchListener = new OnTouchListener() {
@@ -47,6 +46,7 @@ public class StickerHolder extends FrameLayout {
             return true;
         }
     };
+
 
     public StickerHolder(Context context) {
         super(context);
@@ -117,6 +117,44 @@ public class StickerHolder extends FrameLayout {
         innerStickerHolder.addView(stickerImageView);
     }
 
+    public void addFrameSticker(Bitmap bitmap) {
+        hideControlsOfAllChildStickerView();
+
+        StickerFrameView stickerFrameView = new StickerFrameView(mContext);
+        stickerFrameView.setTag("frame");
+        stickerFrameView.setImageDrawable(new BitmapDrawable(getResources(), bitmap));
+
+        int position;
+
+        if (innerStickerHolder.getChildAt(0) != null
+                && innerStickerHolder.getChildAt(0).getTag().equals("overlay")) {
+            position = 1;
+        } else {
+            position = 0;
+        }
+
+        if (innerStickerHolder.getChildAt(position) instanceof StickerFrameView
+                && innerStickerHolder.getChildAt(0).getTag().equals("frame")) {
+            innerStickerHolder.removeViewAt(position);
+        }
+
+        innerStickerHolder.addView(stickerFrameView, position);
+    }
+
+    public void addOverlay(Bitmap bitmap) {
+        hideControlsOfAllChildStickerView();
+        currentOverlayStickerView = new OverlayStickerView(mContext);
+        currentOverlayStickerView.setTag("overlay");
+        currentOverlayStickerView.setImageDrawable(new BitmapDrawable(getResources(), bitmap));
+
+        if (innerStickerHolder.getChildAt(0) instanceof OverlayStickerView) {
+            innerStickerHolder.removeViewAt(0);
+        }
+        innerStickerHolder.addView(currentOverlayStickerView, 0);
+
+        overlayToolsControlVisibility(true);
+    }
+
     public void addTextSticker() {
         hideControlsOfAllChildStickerView();
 
@@ -146,57 +184,6 @@ public class StickerHolder extends FrameLayout {
         });
     }
 
-    public void addFrameSticker(Bitmap bitmap) {
-        hideControlsOfAllChildStickerView();
-
-        StickerFrameView stickerFrameView = new StickerFrameView(mContext);
-        stickerFrameView.setTag("frame");
-        stickerFrameView.setImageDrawable(new BitmapDrawable(getResources(), bitmap));
-
-        int position;
-
-        if (innerStickerHolder.getChildAt(0) != null
-                && innerStickerHolder.getChildAt(0).getTag().equals("overlay")) {
-            position = 1;
-        } else {
-            position = 0;
-        }
-
-        if (innerStickerHolder.getChildAt(position) instanceof StickerFrameView
-                && innerStickerHolder.getChildAt(0).getTag().equals("frame")) {
-            innerStickerHolder.removeViewAt(position);
-        }
-
-        innerStickerHolder.addView(stickerFrameView, position);
-    }
-
-    public void addOverlay(Bitmap bitmap) {
-        if (isOverlay)
-            return;
-
-        hideControlsOfAllChildStickerView();
-
-        currentStickerOverlayView = new StickerFrameView(mContext);
-        currentStickerOverlayView.setTag("overlay");
-        currentStickerOverlayView.setImageDrawable(new BitmapDrawable(getResources(), bitmap));
-
-        if (innerStickerHolder.getChildAt(0) instanceof StickerFrameView
-                && innerStickerHolder.getChildAt(0).getTag().equals("overlay")) {
-            innerStickerHolder.removeViewAt(0);
-        }
-
-        innerStickerHolder.addView(currentStickerOverlayView, 0);
-
-        currentStickerOverlayView.setStickerDeleteListener(new StickerView.StickerDeleteListener() {
-            @Override
-            public void onStickerRemoved() {
-                overlayToolsControlVisibility(false);
-            }
-        });
-
-        overlayToolsControlVisibility(true);
-    }
-
     public void addDrawView() {
         if (isDrawing)
             return;
@@ -223,6 +210,42 @@ public class StickerHolder extends FrameLayout {
         drawingToolsControlVisibility(true);
     }
 
+    public void overlayToolsControlVisibility(boolean visible){
+        if(visible){
+            EditingToolsFragment editingToolsFragment = EditingToolsFragment.newInstance("Opacity", 50);
+            editingToolsFragment.setEditingToolsListener(overlayEditingToolsListener);
+
+            rootView.findViewById(R.id.flContainerTool).setVisibility(VISIBLE);
+
+            ((AppCompatActivity) mContext).getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.flContainerTool, editingToolsFragment)
+                    .commit();
+
+            isDrawing = true;
+        }else{
+            rootView.findViewById(R.id.flContainerTool).setVisibility(GONE);
+            isDrawing = false;
+        }
+    }
+
+    public void drawingToolsControlVisibility(boolean visible) {
+        if (visible) {
+            EditingToolsFragment editingToolsFragment = EditingToolsFragment.newInstance("Brush Size", 10);
+            editingToolsFragment.setEditingToolsListener(drawingEditingToolsListener);
+
+            rootView.findViewById(R.id.flContainerTool).setVisibility(VISIBLE);
+
+            ((AppCompatActivity) mContext).getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.flContainerTool, editingToolsFragment)
+                    .commit();
+
+            isDrawing = true;
+        } else {
+            rootView.findViewById(R.id.flContainerTool).setVisibility(GONE);
+            isDrawing = false;
+        }
+    }
+
     public void textEditorControlVisibility(boolean visible) {
         if (visible) {
             TextEditorFragment textEditorFragment = new TextEditorFragment();
@@ -242,42 +265,6 @@ public class StickerHolder extends FrameLayout {
             });
         } else {
             rootView.findViewById(R.id.flContainerTool).setVisibility(GONE);
-        }
-    }
-
-    public void overlayToolsControlVisibility(boolean visible) {
-        if (visible) {
-            EditingToolsFragment editingToolsFragment = EditingToolsFragment.newInstance("Alpha", 100);
-            editingToolsFragment.setEditingToolsListener(overlayEditingToolsListener);
-
-            rootView.findViewById(R.id.flContainerTool).setVisibility(VISIBLE);
-
-            ((AppCompatActivity) mContext).getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.flContainerTool, editingToolsFragment)
-                    .commit();
-
-            isOverlay = true;
-        } else {
-            rootView.findViewById(R.id.flContainerTool).setVisibility(GONE);
-            isOverlay = false;
-        }
-    }
-
-    public void drawingToolsControlVisibility(boolean visible) {
-        if (visible) {
-            EditingToolsFragment editingToolsFragment = EditingToolsFragment.newInstance("Brush Size", 10);
-            editingToolsFragment.setEditingToolsListener(drawEditingToolsListener);
-
-            rootView.findViewById(R.id.flContainerTool).setVisibility(VISIBLE);
-
-            ((AppCompatActivity) mContext).getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.flContainerTool, editingToolsFragment)
-                    .commit();
-
-            isDrawing = true;
-        } else {
-            rootView.findViewById(R.id.flContainerTool).setVisibility(GONE);
-            isDrawing = false;
         }
     }
 
@@ -304,7 +291,7 @@ public class StickerHolder extends FrameLayout {
         super.onDraw(canvas);
     }
 
-    private EditingToolsFragment.EditingToolsListener drawEditingToolsListener = new EditingToolsFragment.EditingToolsListener() {
+    private EditingToolsFragment.EditingToolsListener drawingEditingToolsListener = new EditingToolsFragment.EditingToolsListener() {
         @Override
         public void onColorSelected(String color) {
             currentStickerDrawView.setPaintColor(Color.parseColor(color));
@@ -324,27 +311,37 @@ public class StickerHolder extends FrameLayout {
         public void onRedoClicked() {
             currentStickerDrawView.redo();
         }
+
+        @Override
+        public void onSeekBarStopTracking(int progress) {
+
+        }
     };
 
     private EditingToolsFragment.EditingToolsListener overlayEditingToolsListener = new EditingToolsFragment.EditingToolsListener() {
         @Override
         public void onColorSelected(String color) {
-
+            currentOverlayStickerView.setColor(Color.parseColor(color));
         }
 
         @Override
         public void onSeekBarProgressChanged(int progress) {
-
+            currentOverlayStickerView.setAlpha(progress/100F);
         }
 
         @Override
         public void onUndoClicked() {
-
+            currentOverlayStickerView.undo();
         }
 
         @Override
         public void onRedoClicked() {
+            currentOverlayStickerView.redo();
+        }
 
+        @Override
+        public void onSeekBarStopTracking(int progress) {
+            currentOverlayStickerView.saveAlpha(progress/100F);
         }
     };
 }

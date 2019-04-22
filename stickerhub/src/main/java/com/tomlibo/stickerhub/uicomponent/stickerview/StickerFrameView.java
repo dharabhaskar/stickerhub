@@ -15,7 +15,7 @@ import androidx.appcompat.widget.AppCompatImageView;
 public class StickerFrameView extends StickerView {
 
     private String owner_id;
-    private AppCompatImageView iv_main;
+    protected AppCompatImageView iv_main;
 
     public StickerFrameView(Context context) {
         super(context);

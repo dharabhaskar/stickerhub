@@ -117,7 +117,7 @@ public class EditingToolsFragment extends Fragment {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
+                mEditingToolsListener.onSeekBarStopTracking(seekBar.getProgress());
             }
         });
     }
@@ -135,6 +135,8 @@ public class EditingToolsFragment extends Fragment {
         void onColorSelected(String color);
 
         void onSeekBarProgressChanged(int progress);
+
+        void onSeekBarStopTracking(int progress);
 
         void onUndoClicked();
 
