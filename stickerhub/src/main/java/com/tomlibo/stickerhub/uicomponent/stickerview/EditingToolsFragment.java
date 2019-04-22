@@ -1,6 +1,5 @@
 package com.tomlibo.stickerhub.uicomponent.stickerview;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,32 +17,53 @@ import com.tomlibo.stickerhub.R;
 import com.tomlibo.stickerhub.uicomponent.CircleView;
 import com.tomlibo.stickerhub.uicomponent.colorpicker.ColorPickerDialog;
 
-public class DrawingToolsFragment extends Fragment {
+public class EditingToolsFragment extends Fragment {
 
+    private static String PARAM_SEEK_BAR_TITLE = "title";
+    private static String PARAM_SEEK_BAR_INITIAL_PROGRESS = "initial_progress";
     private CircleView viewColor;
     private AppCompatTextView tvUndo;
     private AppCompatTextView tvRedo;
-    private AppCompatTextView tvBrushSize;
-    private AppCompatSeekBar sbStrokeSize;
+    private AppCompatTextView tvSeekBarTitle;
+    private AppCompatSeekBar seekBar;
 
-    private Context mContext;
-    private StickerDrawView mStickerDrawView;
-    private int initialStrokeSize = 10;
+    private String mSbTitle;
+    private int mSbInitialProgress;
 
-    public static DrawingToolsFragment newInstance() {
-        return new DrawingToolsFragment();
+    private EditingToolsListener mEditingToolsListener;
+
+    public static EditingToolsFragment newInstance(String sbTitle, int sbInitialProgress) {
+        EditingToolsFragment fragment = new EditingToolsFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(PARAM_SEEK_BAR_TITLE, sbTitle);
+        bundle.putInt(PARAM_SEEK_BAR_INITIAL_PROGRESS, sbInitialProgress);
+
+        fragment.setArguments(bundle);
+
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (getArguments() != null) {
+            mSbTitle = getArguments().getString(PARAM_SEEK_BAR_TITLE);
+            mSbInitialProgress = getArguments().getInt(PARAM_SEEK_BAR_INITIAL_PROGRESS, 0);
+        }
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.layout_drawing_tools, container, false);
+        View view = inflater.inflate(R.layout.layout_editing_tools, container, false);
 
         viewColor = view.findViewById(R.id.colorIndicator);
         tvUndo = view.findViewById(R.id.tvUndo);
         tvRedo = view.findViewById(R.id.tvRedo);
-        tvBrushSize = view.findViewById(R.id.tvBrushSize);
-        sbStrokeSize = view.findViewById(R.id.sbStrokeSize);
+        tvSeekBarTitle = view.findViewById(R.id.tvSeekBarTitle);
+        seekBar = view.findViewById(R.id.seekBar);
 
         return view;
     }
@@ -55,7 +75,7 @@ public class DrawingToolsFragment extends Fragment {
         viewColor.setBackgroundColor(getResources().getColor(R.color.red));
 
         viewColor.setOnClickListener(v -> {
-            new ColorPickerDialog.Builder(mContext)
+            new ColorPickerDialog.Builder(getContext())
                     .initialColor(viewColor.getBackgroundColor()) // Set initial color
                     .enableBrightness(true) // Enable brightness slider or not
                     .enableAlpha(false) // Enable alpha slider or not
@@ -68,26 +88,26 @@ public class DrawingToolsFragment extends Fragment {
                         @Override
                         public void onColorPicked(String color) {
                             viewColor.setBackgroundColor(Color.parseColor(color));
-                            mStickerDrawView.setPaintColor(Color.parseColor(color));
+                            mEditingToolsListener.onColorSelected(color);
                         }
                     });
         });
 
         tvUndo.setOnClickListener(v -> {
-            mStickerDrawView.undo();
+            mEditingToolsListener.onUndoClicked();
         });
 
         tvRedo.setOnClickListener(v -> {
-            mStickerDrawView.redo();
+            mEditingToolsListener.onRedoClicked();
         });
 
-        sbStrokeSize.setProgress(initialStrokeSize);
-        setBrushSize(initialStrokeSize);
+        seekBar.setProgress(mSbInitialProgress);
+        setSbProgress(mSbInitialProgress);
 
-        sbStrokeSize.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                setBrushSize(progress);
+                setSbProgress(progress);
             }
 
             @Override
@@ -102,13 +122,22 @@ public class DrawingToolsFragment extends Fragment {
         });
     }
 
-    public void setStickerDrawView(Context context, StickerDrawView stickerDrawView) {
-        mContext = context;
-        mStickerDrawView = stickerDrawView;
+    private void setSbProgress(int progress) {
+        tvSeekBarTitle.setText(String.format("%s: %s", mSbTitle, progress));
+        mEditingToolsListener.onSeekBarProgressChanged(progress);
     }
 
-    private void setBrushSize(int size) {
-        tvBrushSize.setText(String.format("Brush Size: %s", size));
-        mStickerDrawView.setPaintStrokeWidth(size);
+    public void setEditingToolsListener(EditingToolsListener editingToolsListener) {
+        mEditingToolsListener = editingToolsListener;
+    }
+
+    public interface EditingToolsListener {
+        void onColorSelected(String color);
+
+        void onSeekBarProgressChanged(int progress);
+
+        void onUndoClicked();
+
+        void onRedoClicked();
     }
 }

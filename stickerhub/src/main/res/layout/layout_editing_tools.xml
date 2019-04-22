@@ -60,15 +60,15 @@
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tvBrushSize"
+        android:id="@+id/tvSeekBarTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
-        android:text="Brush Size" />
+        android:text="Title" />
 
     <androidx.appcompat.widget.AppCompatSeekBar
-        android:id="@+id/sbStrokeSize"
+        android:id="@+id/seekBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp" />

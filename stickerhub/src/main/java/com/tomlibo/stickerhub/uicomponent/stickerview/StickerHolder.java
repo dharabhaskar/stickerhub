@@ -3,6 +3,7 @@ package com.tomlibo.stickerhub.uicomponent.stickerview;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -210,13 +211,13 @@ public class StickerHolder extends FrameLayout {
 
     public void drawingToolsControlVisibility(boolean visible) {
         if (visible) {
-            DrawingToolsFragment drawingToolsFragment = new DrawingToolsFragment();
-            drawingToolsFragment.setStickerDrawView(mContext, currentStickerDrawView);
+            EditingToolsFragment editingToolsFragment = EditingToolsFragment.newInstance("Brush Size", 10);
+            editingToolsFragment.setEditingToolsListener(editingToolsListener);
 
             rootView.findViewById(R.id.flContainerTool).setVisibility(VISIBLE);
 
             ((AppCompatActivity) mContext).getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.flContainerTool, drawingToolsFragment)
+                    .replace(R.id.flContainerTool, editingToolsFragment)
                     .commit();
 
             isDrawing = true;
@@ -270,4 +271,26 @@ public class StickerHolder extends FrameLayout {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
     }
+
+    private EditingToolsFragment.EditingToolsListener editingToolsListener = new EditingToolsFragment.EditingToolsListener() {
+        @Override
+        public void onColorSelected(String color) {
+            currentStickerDrawView.setPaintColor(Color.parseColor(color));
+        }
+
+        @Override
+        public void onSeekBarProgressChanged(int progress) {
+            currentStickerDrawView.setPaintStrokeWidth(progress);
+        }
+
+        @Override
+        public void onUndoClicked() {
+            currentStickerDrawView.undo();
+        }
+
+        @Override
+        public void onRedoClicked() {
+            currentStickerDrawView.redo();
+        }
+    };
 }
