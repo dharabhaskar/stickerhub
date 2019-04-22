@@ -3,46 +3,39 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
+        <RelativeLayout
+            android:id="@+id/layout_mainView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
 
-            <RelativeLayout
-                android:id="@+id/layout_mainView"
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_background"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center">
+                android:adjustViewBounds="true" />
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/iv_background"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:adjustViewBounds="true" />
+            <FrameLayout
+                android:id="@+id/layout_innerView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/iv_background"
+                android:layout_alignTop="@+id/iv_background"
+                android:layout_alignEnd="@+id/iv_background"
+                android:layout_alignBottom="@+id/iv_background" />
 
-                <FrameLayout
-                    android:id="@+id/layout_innerView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignStart="@+id/iv_background"
-                    android:layout_alignTop="@+id/iv_background"
-                    android:layout_alignEnd="@+id/iv_background"
-                    android:layout_alignBottom="@+id/iv_background" />
-
-            </RelativeLayout>
-
-        </FrameLayout>
+        </RelativeLayout>
 
         <FrameLayout
             android:id="@+id/flContainerTool"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom" />
 
-    </LinearLayout>
+    </FrameLayout>
 
 </FrameLayout>
