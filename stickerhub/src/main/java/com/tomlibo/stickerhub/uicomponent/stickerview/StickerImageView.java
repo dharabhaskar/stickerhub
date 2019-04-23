@@ -56,6 +56,8 @@ public class StickerImageView extends StickerView {
 
     protected void changeControlVisibility(boolean visible) {
         super.changeControlVisibility(visible);
+        iv_scale.setVisibility(visible ? VISIBLE : GONE);
+        iv_delete.setVisibility(visible ? VISIBLE : GONE);
         iv_flip.setVisibility(visible ? VISIBLE : GONE);
     }
 

@@ -30,7 +30,7 @@ public abstract class StickerView extends FrameLayout {
     protected ImageView iv_color_palette;
     protected ImageView iv_done;
     protected ImageView iv_text_editor;
-    // For scalling
+    // For scaling
     private float this_orgX = -1, this_orgY = -1;
     private float scale_orgX = -1, scale_orgY = -1;
     private double scale_orgWidth = -1, scale_orgHeight = -1;
@@ -45,7 +45,7 @@ public abstract class StickerView extends FrameLayout {
         public boolean onTouch(View view, MotionEvent event) {
 
             if (view.getTag().equals("DraggableViewGroup")) {
-                ViewGroup myCanvas = ((ViewGroup) StickerView.this.getParent().getParent().getParent().getParent().getParent().getParent());
+                ViewGroup myCanvas = ((ViewGroup) StickerView.this.getParent().getParent().getParent().getParent().getParent());
                 if (myCanvas instanceof StickerHolder) {
                     ((StickerHolder) myCanvas).hideControlsOfAllChildStickerView();
                 }
@@ -289,10 +289,9 @@ public abstract class StickerView extends FrameLayout {
 
         this.setLayoutParams(this_params);
         this.addView(getMainView(), iv_main_params);
-
-        this.addView(iv_delete, iv_delete_params);
         this.addView(iv_border, iv_border_params);
         this.addView(iv_scale, iv_scale_params);
+        this.addView(iv_delete, iv_delete_params);
         this.addView(iv_flip, iv_flip_params);
         this.addView(iv_color_palette, iv_color_palette_params);
         this.addView(iv_done, iv_done_params);
@@ -334,8 +333,6 @@ public abstract class StickerView extends FrameLayout {
 
     protected void changeControlVisibility(boolean visible) {
         iv_border.setVisibility(visible ? VISIBLE : GONE);
-        iv_scale.setVisibility(visible ? VISIBLE : GONE);
-        iv_delete.setVisibility(visible ? VISIBLE : GONE);
     }
 
     public void hideControls() {
@@ -434,7 +431,6 @@ public abstract class StickerView extends FrameLayout {
             borderPaint.setColor(Color.WHITE);
             borderPaint.setStyle(Paint.Style.STROKE);
             canvas.drawRect(border, borderPaint);
-
         }
     }
 }

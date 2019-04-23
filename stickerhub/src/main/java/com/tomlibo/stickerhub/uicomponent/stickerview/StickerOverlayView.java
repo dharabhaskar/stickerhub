@@ -10,22 +10,29 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 
-public class StickerFrameView extends StickerView {
+import com.tomlibo.stickerhub.model.OverlayAction;
 
-    private String owner_id;
+import java.util.Stack;
+
+public class StickerOverlayView extends StickerView {
+
+    private Stack<OverlayAction> actions;
+    private Stack<OverlayAction> undoActions;
+    private DoneClickListener mDoneClickListener;
     protected AppCompatImageView iv_main;
 
-    public StickerFrameView(Context context) {
+    public StickerOverlayView(Context context) {
         super(context);
     }
 
-    public StickerFrameView(Context context, AttributeSet attrs) {
+    public StickerOverlayView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public StickerFrameView(Context context, AttributeSet attrs, int defStyle) {
+    public StickerOverlayView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
@@ -54,14 +61,9 @@ public class StickerFrameView extends StickerView {
 
         //Removing on touch listener...
         setOnTouchListener(null);
-    }
 
-    public String getOwnerId() {
-        return this.owner_id;
-    }
-
-    public void setOwnerId(String owner_id) {
-        this.owner_id = owner_id;
+        actions = new Stack<>();
+        undoActions = new Stack<>();
     }
 
     @Override
@@ -80,11 +82,17 @@ public class StickerFrameView extends StickerView {
         if (getImageViewColorPalette() != null)
             getImageViewColorPalette().setVisibility(View.GONE);
 
-        if (getImageViewDone() != null)
-            getImageViewDone().setVisibility(View.GONE);
-
         if (getImageViewTextEditor() != null)
             getImageViewTextEditor().setVisibility(View.GONE);
+
+        if (getImageViewDone() != null) {
+            getImageViewDone().setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mDoneClickListener.onDoneClicked();
+                }
+            });
+        }
 
         return iv_main;
     }
@@ -92,7 +100,7 @@ public class StickerFrameView extends StickerView {
     @Override
     protected void changeControlVisibility(boolean visible) {
         super.changeControlVisibility(visible);
-
+        iv_done.setVisibility(visible ? VISIBLE : GONE);
     }
 
     public void setImageResource(int res_id) {
@@ -109,5 +117,58 @@ public class StickerFrameView extends StickerView {
 
     public void setImageBitmap(Bitmap bmp) {
         this.iv_main.setImageBitmap(bmp);
+    }
+
+    public void setAlpha(Float alpha) {
+        iv_main.setAlpha(alpha);
+    }
+
+    public void setColor(Integer color) {
+        setColor(color, true);
+    }
+
+    public void setColor(int color, boolean saveAction) {
+        iv_main.setColorFilter(color);
+        if (saveAction) {
+            undoActions.clear();
+            actions.push(new OverlayAction(OverlayAction.CHANGE_COLOR, color));
+        }
+    }
+
+    public void saveAlpha(float alpha) {
+        undoActions.clear();
+        actions.push(new OverlayAction(OverlayAction.CHANGE_ALPHA, alpha));
+    }
+
+    private void applyAction(@NonNull OverlayAction action) {
+        switch (action.getActionType()) {
+            case OverlayAction.CHANGE_ALPHA:
+                setAlpha((Float) action.getActionValue());
+                break;
+            case OverlayAction.CHANGE_COLOR:
+                setColor((Integer) action.getActionValue(), false);
+        }
+    }
+
+    public void undo() {
+        if (!actions.empty()) {
+            undoActions.push(actions.pop());
+            applyAction(undoActions.peek());
+        }
+    }
+
+    public void redo() {
+        if (!undoActions.isEmpty()) {
+            actions.push(undoActions.pop());
+            applyAction(actions.peek());
+        }
+    }
+
+    public void setDoneClickListener(DoneClickListener doneClickListener) {
+        this.mDoneClickListener = doneClickListener;
+    }
+
+    public interface DoneClickListener {
+        void onDoneClicked();
     }
 }

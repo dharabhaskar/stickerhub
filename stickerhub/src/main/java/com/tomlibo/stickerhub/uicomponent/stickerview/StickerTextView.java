@@ -86,6 +86,8 @@ public class StickerTextView extends StickerView {
     @Override
     protected void changeControlVisibility(boolean visible) {
         super.changeControlVisibility(visible);
+        iv_delete.setVisibility(visible ? VISIBLE : GONE);
+        iv_scale.setVisibility(visible ? VISIBLE : GONE);
         iv_color_palette.setVisibility(visible ? VISIBLE : GONE);
         iv_text_editor.setVisibility(visible ? VISIBLE : GONE);
     }
