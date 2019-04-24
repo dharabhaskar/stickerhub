@@ -10,6 +10,7 @@ import com.tomlibo.stickerhub.model.StickerInfo;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class StickerDataReader {
@@ -37,6 +38,7 @@ public class StickerDataReader {
             if (stickerInfo.getFormattedTitle().contains("overlay")) continue;
             stickerInfoList.add(stickerInfo);
         }
+        //Collections.shuffle(stickerInfoList);
         return stickerInfoList;
     }
 

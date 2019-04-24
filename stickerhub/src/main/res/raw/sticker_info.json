@@ -9,7 +9,7 @@
         "id": 2,
         "name": "In Love",
         "start": 1,
-        "end": 20
+        "end": 40
     },
     {
         "id": 3,
@@ -21,13 +21,13 @@
         "id": 4,
         "name": "Working",
         "start": 1,
-        "end": 20
+        "end": 21
     },
     {
         "id": 5,
         "name": "Active",
         "start": 1,
-        "end": 20
+        "end": 40
     },
     {
         "id": 6,
@@ -39,7 +39,7 @@
         "id": 7,
         "name": "Frames",
         "start": 1,
-        "end": 20
+        "end": 21
     },
     {
         "id": 8,
