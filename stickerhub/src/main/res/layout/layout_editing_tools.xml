@@ -2,7 +2,7 @@
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/white_transparent"
     android:orientation="vertical"
     android:padding="8dp">
@@ -17,8 +17,8 @@
 
         <com.tomlibo.stickerhub.uicomponent.CircleView
             android:id="@+id/colorIndicator"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             app:cv_backgroundColorValue="@color/white"
             app:cv_fillRadius="0"
             app:cv_strokeColorValue="@color/black"
@@ -31,17 +31,20 @@
             android:text="Color" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="end"
+            android:layout_weight="1"
+            android:gravity="center_vertical|end"
             android:orientation="horizontal">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvUndo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
                 android:background="?android:selectableItemBackgroundBorderless"
                 android:drawableTop="@drawable/ic_undo_black_24dp"
+                android:includeFontPadding="false"
                 android:padding="4dp"
                 android:text="Undo" />
 
@@ -52,6 +55,7 @@
                 android:layout_marginStart="16dp"
                 android:background="?android:selectableItemBackgroundBorderless"
                 android:drawableTop="@drawable/ic_redo_black_24dp"
+                android:includeFontPadding="false"
                 android:padding="4dp"
                 android:text="Redo" />
 
@@ -64,13 +68,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="Title" />
 
     <androidx.appcompat.widget.AppCompatSeekBar
         android:id="@+id/seekBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp" />
+        android:padding="8dp" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

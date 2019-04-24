@@ -7,4 +7,6 @@
     <color name="grey_light">#E6E6E6</color>
     <color name="grey_medium">#AAAAAA</color>
     <color name="red">#FF0000</color>
+    <color name="soft_red">#D50000</color>
+    <color name="soft_green">#00C853</color>
 </resources>

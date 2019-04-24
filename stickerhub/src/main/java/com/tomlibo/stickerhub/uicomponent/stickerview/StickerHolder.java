@@ -46,6 +46,11 @@ public class StickerHolder extends FrameLayout {
         }
 
         @Override
+        public void onSeekBarStopTracking(int progress) {
+            currentStickerOverlayView.saveAlpha(progress / 100F);
+        }
+
+        @Override
         public void onUndoClicked() {
             currentStickerOverlayView.undo();
         }
@@ -53,11 +58,6 @@ public class StickerHolder extends FrameLayout {
         @Override
         public void onRedoClicked() {
             currentStickerOverlayView.redo();
-        }
-
-        @Override
-        public void onSeekBarStopTracking(int progress) {
-            currentStickerOverlayView.saveAlpha(progress / 100F);
         }
     };
 
@@ -73,6 +73,11 @@ public class StickerHolder extends FrameLayout {
         }
 
         @Override
+        public void onSeekBarStopTracking(int progress) {
+
+        }
+
+        @Override
         public void onUndoClicked() {
             currentStickerDrawView.undo();
         }
@@ -80,11 +85,6 @@ public class StickerHolder extends FrameLayout {
         @Override
         public void onRedoClicked() {
             currentStickerDrawView.redo();
-        }
-
-        @Override
-        public void onSeekBarStopTracking(int progress) {
-
         }
     };
 
