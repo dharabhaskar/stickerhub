@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.tomlibo.stickerhub.R
@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.list_item_sticker_category.view.*
 import java.util.*
 
 class StickerCategoryAdapter(private val context: Context, private val items: ArrayList<StickerInfo>) : RecyclerView.Adapter<StickerCategoryAdapter.StickerViewHolder>() {
-    private var lastSelection = 0;
+    private var lastSelection = 0
 
     init {
         if (items.size > 0) {
@@ -35,15 +35,18 @@ class StickerCategoryAdapter(private val context: Context, private val items: Ar
         Glide.with(context)
                 .load(items[position].thumbUrl)
                 .into(holder.ivSticker)
-        holder.flBorder.visibility = if (items[position].isSelected) View.VISIBLE else View.GONE
+
+        holder.tvCategoryName.text = items[position].categoryTitle
+
+        holder.bottomLine.visibility = if (items[position].isSelected) View.VISIBLE else View.GONE
     }
 
 
-    fun updateSelection(positon: Int) {
+    fun updateSelection(position: Int) {
         items[lastSelection].isSelected = false
-        items[positon].isSelected = true
+        items[position].isSelected = true
 
-        lastSelection = positon
+        lastSelection = position
         notifyDataSetChanged()
     }
 
@@ -53,6 +56,7 @@ class StickerCategoryAdapter(private val context: Context, private val items: Ar
 
     class StickerViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val ivSticker: SquareImageView = view.ivSticker
-        val flBorder: FrameLayout = view.flBorder
+        val tvCategoryName: AppCompatTextView = view.tvCategoryName
+        val bottomLine: View = view.bottomLine
     }
 }
