@@ -100,6 +100,7 @@ public class StickerOverlayView extends StickerView {
     @Override
     protected void changeControlVisibility(boolean visible) {
         super.changeControlVisibility(visible);
+        iv_delete.setVisibility(visible ? VISIBLE : GONE);
         iv_done.setVisibility(visible ? VISIBLE : GONE);
     }
 
