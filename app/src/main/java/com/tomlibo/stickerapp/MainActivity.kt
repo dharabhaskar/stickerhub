@@ -2,6 +2,8 @@ package com.tomlibo.stickerapp
 
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.SimpleTarget
@@ -55,6 +57,21 @@ class MainActivity : AppCompatActivity(), StickerClickListener, FrameClickListen
         stickerGalleryBottomSheet.setStickerClickListener(this)
         stickerFrameBottomSheet.setFrameClickListener(this)
         stickerOverlayBottomSheet.setOverlayClickListener(this)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        val id = item?.itemId
+
+        if (id == R.id.action_save) {
+            stickerHolder.hideAllControlsOfAllChildStickerView()
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onSelectedSticker(url: String?) {

@@ -47,7 +47,7 @@ public abstract class StickerView extends FrameLayout {
             if (view.getTag().equals("DraggableViewGroup")) {
                 ViewGroup myCanvas = ((ViewGroup) StickerView.this.getParent().getParent().getParent().getParent().getParent());
                 if (myCanvas instanceof StickerHolder) {
-                    ((StickerHolder) myCanvas).hideControlsOfAllChildStickerView();
+                    ((StickerHolder) myCanvas).hideStickerViewControls();
                 }
                 showControls();
 
@@ -333,6 +333,16 @@ public abstract class StickerView extends FrameLayout {
 
     protected void changeControlVisibility(boolean visible) {
         iv_border.setVisibility(visible ? VISIBLE : GONE);
+    }
+
+    public void hideAllControlsFinally() {
+        iv_border.setVisibility(GONE);
+        iv_scale.setVisibility(GONE);
+        iv_delete.setVisibility(GONE);
+        iv_flip.setVisibility(GONE);
+        iv_color_palette.setVisibility(GONE);
+        iv_done.setVisibility(GONE);
+        iv_text_editor.setVisibility(GONE);
     }
 
     public void hideControls() {

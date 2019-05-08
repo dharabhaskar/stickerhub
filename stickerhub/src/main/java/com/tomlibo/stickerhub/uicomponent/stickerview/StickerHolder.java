@@ -94,7 +94,7 @@ public class StickerHolder extends FrameLayout {
             if (view.getTag().equals("StickerHolder")) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        hideControlsOfAllChildStickerView();
+                        hideStickerViewControls();
                 }
             }
             return true;
@@ -138,7 +138,24 @@ public class StickerHolder extends FrameLayout {
         innerStickerHolder.setOnTouchListener(mOnTouchListener);
     }
 
-    public void hideControlsOfAllChildStickerView() {
+    public void hideAllControlsOfAllChildStickerView() {
+        for (int i = 0; i < innerStickerHolder.getChildCount(); i++) {
+            View view = innerStickerHolder.getChildAt(i);
+            if (view instanceof StickerView) {
+                ((StickerView) view).hideAllControlsFinally();
+
+                if (view instanceof StickerDrawView) {
+                    ((StickerDrawView) view).stopDrawing();
+                }
+            }
+        }
+
+        textEditorControlVisibility(false);
+        overlayToolsControlVisibility(false);
+        drawingToolsControlVisibility(false);
+    }
+
+    protected void hideStickerViewControls() {
         for (int i = 0; i < innerStickerHolder.getChildCount(); i++) {
             View view = innerStickerHolder.getChildAt(i);
             if (view instanceof StickerView) {
@@ -164,7 +181,7 @@ public class StickerHolder extends FrameLayout {
     }
 
     public void addImageSticker(Bitmap bitmap) {
-        hideControlsOfAllChildStickerView();
+        hideStickerViewControls();
 
         StickerImageView stickerImageView = new StickerImageView(mContext);
         stickerImageView.setImageDrawable(new BitmapDrawable(getResources(), bitmap));
@@ -172,7 +189,7 @@ public class StickerHolder extends FrameLayout {
     }
 
     public void addTextSticker() {
-        hideControlsOfAllChildStickerView();
+        hideStickerViewControls();
 
         StickerTextView stickerTextView = new StickerTextView(mContext);
         stickerTextView.setText("Your Text");
@@ -201,7 +218,7 @@ public class StickerHolder extends FrameLayout {
     }
 
     public void addFrameSticker(Bitmap bitmap) {
-        hideControlsOfAllChildStickerView();
+        hideStickerViewControls();
 
         StickerFrameView stickerFrameView = new StickerFrameView(mContext);
         stickerFrameView.setTag("frame");
@@ -225,7 +242,7 @@ public class StickerHolder extends FrameLayout {
     }
 
     public void addOverlay(Bitmap bitmap) {
-        hideControlsOfAllChildStickerView();
+        hideStickerViewControls();
 
         currentStickerOverlayView = new StickerOverlayView(mContext);
         currentStickerOverlayView.setTag("overlay");
@@ -240,7 +257,7 @@ public class StickerHolder extends FrameLayout {
         currentStickerOverlayView.setDoneClickListener(new StickerOverlayView.DoneClickListener() {
             @Override
             public void onDoneClicked() {
-                hideControlsOfAllChildStickerView();
+                hideStickerViewControls();
             }
         });
 
@@ -258,7 +275,7 @@ public class StickerHolder extends FrameLayout {
         if (isDrawing)
             return;
 
-        hideControlsOfAllChildStickerView();
+        hideStickerViewControls();
 
         currentStickerDrawView = new StickerDrawView(mContext);
         innerStickerHolder.addView(currentStickerDrawView);
@@ -266,7 +283,7 @@ public class StickerHolder extends FrameLayout {
         currentStickerDrawView.setDrawingDoneClickListener(new StickerDrawView.DrawingDoneClickListener() {
             @Override
             public void onDoneClicked() {
-                hideControlsOfAllChildStickerView();
+                hideStickerViewControls();
             }
         });
 

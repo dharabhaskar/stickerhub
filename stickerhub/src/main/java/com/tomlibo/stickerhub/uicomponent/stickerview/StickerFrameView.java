@@ -92,7 +92,7 @@ public class StickerFrameView extends StickerView {
     @Override
     protected void changeControlVisibility(boolean visible) {
         super.changeControlVisibility(visible);
-        iv_delete.setVisibility(visible ? VISIBLE : GONE);
+
     }
 
     public void setImageResource(int res_id) {
