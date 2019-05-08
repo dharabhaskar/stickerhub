@@ -17,10 +17,14 @@ import com.tomlibo.stickerhub.R;
 import com.tomlibo.stickerhub.uicomponent.CircleView;
 import com.tomlibo.stickerhub.uicomponent.colorpicker.ColorPickerDialog;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 public class EditingToolsFragment extends Fragment {
 
     private static String PARAM_SEEK_BAR_TITLE = "title";
     private static String PARAM_SEEK_BAR_INITIAL_PROGRESS = "initial_progress";
+    private static String PARAM_UNDO_REDO_VISIBILITY = "undo_redo_visibility";
     private CircleView viewColor;
     private AppCompatTextView tvUndo;
     private AppCompatTextView tvRedo;
@@ -29,15 +33,17 @@ public class EditingToolsFragment extends Fragment {
 
     private String mSbTitle;
     private int mSbInitialProgress;
+    private boolean mUndoRedoVisibility;
 
     private EditingToolsListener mEditingToolsListener;
 
-    public static EditingToolsFragment newInstance(String sbTitle, int sbInitialProgress) {
+    public static EditingToolsFragment newInstance(String sbTitle, int sbInitialProgress, boolean undoRedoVisibility) {
         EditingToolsFragment fragment = new EditingToolsFragment();
 
         Bundle bundle = new Bundle();
         bundle.putString(PARAM_SEEK_BAR_TITLE, sbTitle);
         bundle.putInt(PARAM_SEEK_BAR_INITIAL_PROGRESS, sbInitialProgress);
+        bundle.putBoolean(PARAM_UNDO_REDO_VISIBILITY, undoRedoVisibility);
 
         fragment.setArguments(bundle);
 
@@ -51,6 +57,7 @@ public class EditingToolsFragment extends Fragment {
         if (getArguments() != null) {
             mSbTitle = getArguments().getString(PARAM_SEEK_BAR_TITLE);
             mSbInitialProgress = getArguments().getInt(PARAM_SEEK_BAR_INITIAL_PROGRESS, 0);
+            mUndoRedoVisibility = getArguments().getBoolean(PARAM_UNDO_REDO_VISIBILITY);
         }
     }
 
@@ -93,6 +100,8 @@ public class EditingToolsFragment extends Fragment {
                     });
         });
 
+        undoRedoControlVisibility(mUndoRedoVisibility);
+
         tvUndo.setOnClickListener(v -> {
             mEditingToolsListener.onUndoClicked();
         });
@@ -120,6 +129,11 @@ public class EditingToolsFragment extends Fragment {
                 mEditingToolsListener.onSeekBarStopTracking(seekBar.getProgress());
             }
         });
+    }
+
+    private void undoRedoControlVisibility(boolean visibility) {
+        tvUndo.setVisibility(visibility ? VISIBLE : GONE);
+        tvRedo.setVisibility(visibility ? VISIBLE : GONE);
     }
 
     private void setSbProgress(int progress) {

@@ -299,7 +299,7 @@ public class StickerHolder extends FrameLayout {
 
     public void overlayToolsControlVisibility(boolean visible) {
         if (visible) {
-            EditingToolsFragment editingToolsFragment = EditingToolsFragment.newInstance("Opacity", 50);
+            EditingToolsFragment editingToolsFragment = EditingToolsFragment.newInstance("Opacity", 50, false);
             editingToolsFragment.setEditingToolsListener(overlayEditingToolsListener);
 
             rootView.findViewById(R.id.flContainerTool).setVisibility(VISIBLE);
@@ -317,7 +317,7 @@ public class StickerHolder extends FrameLayout {
 
     public void drawingToolsControlVisibility(boolean visible) {
         if (visible) {
-            EditingToolsFragment editingToolsFragment = EditingToolsFragment.newInstance("Brush Size", 10);
+            EditingToolsFragment editingToolsFragment = EditingToolsFragment.newInstance("Brush Size", 10, true);
             editingToolsFragment.setEditingToolsListener(drawingEditingToolsListener);
 
             rootView.findViewById(R.id.flContainerTool).setVisibility(VISIBLE);
