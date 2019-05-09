@@ -3,48 +3,48 @@
         "id": 1,
         "name": "Happy",
         "start": 1,
-        "end": 20
+        "end": 52
     },
     {
         "id": 2,
-        "name": "In Love",
+        "name": "Love",
         "start": 1,
-        "end": 40
+        "end": 59
     },
     {
         "id": 3,
         "name": "Confused",
         "start": 1,
-        "end": 19
+        "end": 51
     },
     {
         "id": 4,
         "name": "Working",
         "start": 1,
-        "end": 21
+        "end": 62
     },
     {
         "id": 5,
         "name": "Active",
         "start": 1,
-        "end": 40
+        "end": 60
     },
     {
         "id": 6,
         "name": "Sad",
         "start": 1,
-        "end": 20
+        "end": 63
     },
     {
         "id": 7,
         "name": "Frames",
         "start": 1,
-        "end": 21
+        "end": 121
     },
     {
         "id": 8,
         "name": "Overlays",
         "start": 1,
-        "end": 25
+        "end": 26
     }
 ]
