@@ -54,6 +54,8 @@ public class StickerInfo {
     }
 
     public String getCategoryTitle() {
+        if (categoryTitle.equals("In Love"))
+            return "Love";
         return categoryTitle;
     }
 

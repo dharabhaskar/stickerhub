@@ -41,7 +41,6 @@ class StickerCategoryAdapter(private val context: Context, private val items: Ar
         holder.bottomLine.visibility = if (items[position].isSelected) View.VISIBLE else View.GONE
     }
 
-
     fun updateSelection(position: Int) {
         items[lastSelection].isSelected = false
         items[position].isSelected = true
