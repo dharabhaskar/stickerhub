@@ -73,7 +73,7 @@ public class StickerDataReader {
         return allStickers.get(index).getStickerUrlList();
     }
 
-    public static List<String> getAllStikers(Context context) throws IOException {
+    public static List<String> getAllStickers(Context context) throws IOException {
         List<String> stickerUrlList = new ArrayList<>();
         for (StickerInfo stickerInfo : getOnlyStickers(context)) {
             stickerUrlList.addAll(stickerInfo.getStickerUrlList());
