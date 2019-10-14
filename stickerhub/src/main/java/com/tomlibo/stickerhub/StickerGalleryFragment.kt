@@ -1,6 +1,5 @@
 package com.tomlibo.stickerhub
 
-import android.app.ProgressDialog
 import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
@@ -21,7 +20,6 @@ import java.io.*
 import java.net.URL
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
-import java.nio.file.Files.isDirectory
 
 class StickerGalleryFragment : Fragment() {
 
@@ -87,7 +85,6 @@ class StickerGalleryFragment : Fragment() {
 
     private inner class DownloadFile : AsyncTask<String, String, String>() {
 
-        private var progressDialog: ProgressDialog? = null
         private var fileDirectory: File? = null
         private var fileName: String? = null
         private var file: File? = null
@@ -98,10 +95,10 @@ class StickerGalleryFragment : Fragment() {
          */
         override fun onPreExecute() {
             super.onPreExecute()
-            this.progressDialog = ProgressDialog(context)
-            this.progressDialog!!.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)
-            this.progressDialog!!.setCancelable(false)
-            this.progressDialog!!.show()
+            layoutDownload.visibility = View.VISIBLE
+            progressBar.progress = 0
+            tvDownloadPercentage.text = "0%"
+            tvDownloadStatus.text = "0/100"
         }
 
         /**
@@ -169,14 +166,14 @@ class StickerGalleryFragment : Fragment() {
          */
         override fun onProgressUpdate(vararg progress: String) {
             // setting progress percentage
-            progressDialog!!.progress = Integer.parseInt(progress[0])
+            progressBar.progress = Integer.parseInt(progress[0])
+            tvDownloadPercentage.text = String.format("%s%s", progress[0], "%")
+            tvDownloadStatus.text = String.format("%s%s", progress[0], "/100")
         }
 
 
         override fun onPostExecute(message: String) {
-            // dismiss the dialog after the file was downloaded
-            this.progressDialog!!.dismiss()
-
+            // start unzip the downloaded file
             unzip(file!!, fileDirectory!!)
         }
     }
@@ -198,8 +195,14 @@ class StickerGalleryFragment : Fragment() {
                     continue
                 val fileOutputStream = FileOutputStream(file)
                 fileOutputStream.use { fileOutputStream ->
-                    while ({ count = zis.read(buffer); count }() != -1)
+                    while ({ count = zis.read(buffer); count }() != -1) {
                         fileOutputStream.write(buffer, 0, count)
+
+                        zipFile.delete()
+
+                        layoutDownload.visibility = View.GONE
+                        rcvSticker.visibility = View.VISIBLE
+                    }
                 }
             }
         }

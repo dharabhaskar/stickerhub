@@ -25,13 +25,12 @@
                     android:id="@+id/rcvSticker"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="visible" />
+                    android:visibility="invisible" />
 
                 <LinearLayout
-                    android:id="@+id/layoutProgress"
+                    android:id="@+id/layoutDownload"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
                     android:orientation="vertical"
                     android:padding="16dp"
                     android:visibility="gone">
@@ -44,6 +43,7 @@
                         android:textSize="16sp" />
 
                     <ProgressBar
+                        android:id="@+id/progressBar"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -63,7 +63,7 @@
                             android:text="0%" />
 
                         <TextView
-                            android:id="@+id/tvDownloadProgress"
+                            android:id="@+id/tvDownloadStatus"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
