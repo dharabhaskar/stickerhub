@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.tomlibo.stickerhub.R
+import com.tomlibo.stickerhub.uicomponent.SquareImageView
 import kotlinx.android.synthetic.main.list_item_sticker.view.*
 import java.util.*
 
@@ -26,6 +27,11 @@ class StickerAdapter(private val context: Context, private val items: ArrayList<
                 .into(holder.ivSticker)
     }
 
+    fun addItems(stickers: List<String>) {
+        items.addAll(stickers)
+        notifyDataSetChanged()
+    }
+
     fun replaceItems(newStickers: List<String>) {
         items.clear()
         items.addAll(newStickers)
@@ -37,6 +43,6 @@ class StickerAdapter(private val context: Context, private val items: ArrayList<
     }
 
     class StickerViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val ivSticker = view.ivSticker
+        val ivSticker: SquareImageView = view.ivSticker
     }
 }

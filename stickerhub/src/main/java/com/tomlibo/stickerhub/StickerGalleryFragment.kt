@@ -1,5 +1,6 @@
 package com.tomlibo.stickerhub
 
+import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
@@ -63,7 +64,6 @@ class StickerGalleryFragment : Fragment() {
         rcvSticker.layoutManager = GridLayoutManager(context, 3)
         rcvSticker.addItemDecoration(GridSpacingItemDecoration(3, 4, false))
         rcvSticker.adapter = stickerAdapter
-        stickerAdapter?.replaceItems(StickerDataReader.getStickersByIndex(activity, 0))
 
         rcvSticker.addOnItemTouchListener(RecyclerItemClickListener(context, RecyclerItemClickListener.OnItemClickListener { view, position ->
             if (context is StickerClickListener) {
@@ -141,7 +141,7 @@ class StickerGalleryFragment : Fragment() {
                     // publishing the progress....
                     // After this onProgressUpdate will be called
                     publishProgress("" + ((loadedSize * 100) / lengthOfFile).toInt())
-                    Log.d(TAG, "Progress: " + ((loadedSize * 100) / lengthOfFile).toInt())
+                    //Log.d(TAG, "Progress: " + ((loadedSize * 100) / lengthOfFile).toInt())
 
                     outputStream.write(buffer, 0, dataSize)
                 }
@@ -179,7 +179,7 @@ class StickerGalleryFragment : Fragment() {
     }
 
     @Throws(IOException::class)
-    fun unzip(zipFile: File, targetDirectory: File) {
+    private fun unzip(zipFile: File, targetDirectory: File) {
         val zis = ZipInputStream(
                 BufferedInputStream(FileInputStream(zipFile)))
         zis.use { zis ->
@@ -197,14 +197,38 @@ class StickerGalleryFragment : Fragment() {
                 fileOutputStream.use { fileOutputStream ->
                     while ({ count = zis.read(buffer); count }() != -1) {
                         fileOutputStream.write(buffer, 0, count)
-
-                        zipFile.delete()
-
-                        layoutDownload.visibility = View.GONE
-                        rcvSticker.visibility = View.VISIBLE
                     }
                 }
             }
+
+            // delete downloaded zip file
+            zipFile.delete()
+
+            layoutDownload.visibility = View.GONE
+            rcvSticker.visibility = View.VISIBLE
+
+            val stickerFiles = getAllImageFiles(targetDirectory)
+            if (stickerFiles.isNotEmpty()) {
+                val stickerList: ArrayList<String> = ArrayList()
+                for (file in stickerFiles) {
+                    stickerList.add(Uri.fromFile(file).toString())
+                }
+
+                stickerAdapter!!.addItems(stickerList)
+            }
         }
+    }
+
+    private fun getAllImageFiles(parentDir: File): List<File> {
+        val inFiles = ArrayList<File>()
+        val files = parentDir.listFiles()
+        for (file in files) {
+            if (file.isDirectory) {
+                inFiles.addAll(getAllImageFiles(file))
+            } else {
+                inFiles.add(file)
+            }
+        }
+        return inFiles
     }
 }
