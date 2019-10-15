@@ -31,27 +31,16 @@ class StickerGalleryBottomSheet : BottomSheetDialogFragment() {
 
         tvTitle.text = resources.getString(R.string.sticker_header)
 
-        val fragment = StickerGalleryFragment.newInstance()
-        fragment.setStickerClickListener(stickerClickListener)
-
-        // add sticker gallery fragment
-        childFragmentManager
-                .beginTransaction()
-                .add(R.id.container, fragment, StickerGalleryFragment().tag)
-                .commit()
-
-        ReadStrickerJsonFile().execute(Constants.STICKER_BASE_URL + "/sticker-info.json")
+        ReadStickerJsonFile().execute(Constants.STICKER_BASE_URL + "/sticker-info.json")
     }
 
     fun setStickerClickListener(stickerClickListener: StickerClickListener) {
         this.stickerClickListener = stickerClickListener
     }
 
-    private inner class ReadStrickerJsonFile : AsyncTask<String, String, String>() {
+    private inner class ReadStickerJsonFile : AsyncTask<String, String, List<StickerInfo>>() {
 
-        private var fileDirectory: File? = null
-        private var fileName: String? = null
-        private var file: File? = null
+        var stickerInfoList: List<StickerInfo> = ArrayList()
 
         /**
          * Before starting background thread
@@ -65,39 +54,43 @@ class StickerGalleryBottomSheet : BottomSheetDialogFragment() {
         /**
          * Downloading file in background thread
          */
-        override fun doInBackground(vararg f_url: String): String {
+        override fun doInBackground(vararg f_url: String): List<StickerInfo> {
             try {
                 val url = URL(f_url[0])
                 val connection = url.openConnection()
                 connection.connect()
 
-                // getting file length
-                val lengthOfFile = connection.contentLength
-
                 // input stream to read file - with 8k buffer
                 val inputStream = BufferedInputStream(url.openStream(), 8192)
 
-                Log.e("JSON", Gson().toJson(parse(inputStream)))
+                stickerInfoList = parse(inputStream)
 
                 inputStream.close()
-
-                return "Downloaded at: $file"
             } catch (e: Exception) {
                 Log.e("Error: ", e.message)
             }
 
-            return "Something went wrong"
+            return stickerInfoList
         }
 
-        override fun onPostExecute(message: String) {
+        override fun onPostExecute(stickerInfoList: List<StickerInfo>) {
             progressBar.visibility = View.GONE
+
+            val fragment = StickerGalleryFragment.newInstance(stickerInfoList)
+            fragment.setStickerClickListener(stickerClickListener)
+
+            // add sticker gallery fragment
+            childFragmentManager
+                    .beginTransaction()
+                    .add(R.id.container, fragment, StickerGalleryFragment().tag)
+                    .commit()
         }
     }
 
     /*
     * Method to parse InputStream to String JSON
     * */
-    private fun parse(inputStream: InputStream): List<StickerInfo>? {
+    private fun parse(inputStream: InputStream): List<StickerInfo> {
         val result: StringBuilder
         return try {
             val reader = BufferedReader(InputStreamReader(inputStream))
@@ -113,7 +106,7 @@ class StickerGalleryBottomSheet : BottomSheetDialogFragment() {
             }.type)
         } catch (e: IOException) {
             e.printStackTrace()
-            null
+            arrayListOf()
         }
     }
 }

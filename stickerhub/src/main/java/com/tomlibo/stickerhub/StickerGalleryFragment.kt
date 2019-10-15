@@ -13,7 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.tomlibo.stickerhub.adapter.StickerAdapter
 import com.tomlibo.stickerhub.adapter.StickerCategoryAdapter
 import com.tomlibo.stickerhub.listener.StickerClickListener
+import com.tomlibo.stickerhub.model.StickerInfo
 import com.tomlibo.stickerhub.uicomponent.GridSpacingItemDecoration
+import com.tomlibo.stickerhub.util.Constants
 import com.tomlibo.stickerhub.util.RecyclerItemClickListener
 import com.tomlibo.stickerhub.util.StickerDataReader
 import kotlinx.android.synthetic.main.fragment_sticker_gallery.*
@@ -26,14 +28,20 @@ class StickerGalleryFragment : Fragment() {
 
     private val TAG = StickerGalleryFragment::class.java.simpleName
 
-    private val stickerList: ArrayList<String> = ArrayList()
+    private var stickerInfoList: ArrayList<StickerInfo>? = ArrayList()
     private var stickerClickListener: StickerClickListener? = null
     private var categoryAdapter: StickerCategoryAdapter? = null
     private var stickerAdapter: StickerAdapter? = null
 
     companion object {
-        fun newInstance(): StickerGalleryFragment {
-            return StickerGalleryFragment()
+        private const val PARAM_STICKER_INFO = "PARAM_STICKER_INFO"
+
+        fun newInstance(stickerInfoList: List<StickerInfo>): StickerGalleryFragment {
+            val args = Bundle()
+            args.putParcelableArrayList(PARAM_STICKER_INFO, stickerInfoList as ArrayList)
+            val fragment = StickerGalleryFragment()
+            fragment.arguments = args
+            return fragment
         }
     }
 
@@ -43,7 +51,12 @@ class StickerGalleryFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        categoryAdapter = StickerCategoryAdapter(requireContext(), ArrayList(StickerDataReader.getOnlyStickers(context)))
+
+        stickerInfoList = arguments!!.getParcelableArrayList<StickerInfo>(PARAM_STICKER_INFO)
+
+        StickerDataReader.init(stickerInfoList)
+
+        categoryAdapter = StickerCategoryAdapter(requireContext(), ArrayList(StickerDataReader.getOnlyStickers()))
         stickerAdapter = StickerAdapter(requireContext(), ArrayList())
     }
 
@@ -57,7 +70,25 @@ class StickerGalleryFragment : Fragment() {
         rcvCategory.addOnItemTouchListener(RecyclerItemClickListener(context, RecyclerItemClickListener.OnItemClickListener { v, position ->
             categoryAdapter?.updateSelection(position)
             val stickerInfo = categoryAdapter?.getItem(position)
-            stickerAdapter?.replaceItems(stickerInfo?.stickerUrlList as List<String>)
+
+            val directory = File(activity!!.filesDir, "sticker/" + stickerInfo?.categoryTitle?.toLowerCase())
+            val contents = directory.listFiles()
+            if (contents == null || contents.isEmpty()) {
+                DownloadFile().execute(Constants.STICKER_BASE_URL + "/" + stickerInfo?.categoryTitle?.toLowerCase() + "/" + stickerInfo?.categoryTitle?.toLowerCase() + ".zip")
+            } else {
+                val stickerFiles = imageReaderNew(directory)
+                if (stickerFiles.isNotEmpty()) {
+                    val stickerList: ArrayList<String> = ArrayList()
+                    for (file in stickerFiles) {
+                        stickerList.add(Uri.fromFile(file).toString())
+                    }
+
+                    stickerAdapter!!.replaceItems(stickerList)
+
+                    layoutDownload.visibility = View.GONE
+                    rcvSticker.visibility = View.VISIBLE
+                }
+            }
         }))
 
         //load all stickers
@@ -65,22 +96,35 @@ class StickerGalleryFragment : Fragment() {
         rcvSticker.addItemDecoration(GridSpacingItemDecoration(3, 4, false))
         rcvSticker.adapter = stickerAdapter
 
+        val directory = File(activity!!.filesDir, "sticker/" + StickerDataReader.getStickerInfoByIndex(0)?.categoryTitle?.toLowerCase())
+        val contents = directory.listFiles()
+        if (contents == null || contents.isEmpty()) {
+            DownloadFile().execute(Constants.STICKER_BASE_URL + "/" + StickerDataReader.getStickerInfoByIndex(0)?.categoryTitle?.toLowerCase() + "/" + StickerDataReader.getStickerInfoByIndex(0)?.categoryTitle?.toLowerCase() + ".zip")
+        } else {
+            val stickerFiles = imageReaderNew(directory)
+            if (stickerFiles.isNotEmpty()) {
+                val stickerList: ArrayList<String> = ArrayList()
+                for (file in stickerFiles) {
+                    stickerList.add(Uri.fromFile(file).toString())
+                }
+
+                stickerAdapter!!.replaceItems(stickerList)
+
+                layoutDownload.visibility = View.GONE
+                rcvSticker.visibility = View.VISIBLE
+            }
+        }
+
         rcvSticker.addOnItemTouchListener(RecyclerItemClickListener(context, RecyclerItemClickListener.OnItemClickListener { view, position ->
             if (context is StickerClickListener) {
                 stickerClickListener = context as StickerClickListener
             }
             stickerClickListener?.onSelectedSticker(stickerAdapter?.getItem(position))
         }))
-
-        DownloadFile().execute("https://storage.googleapis.com/tom-data-bucket/tom-stock-image/app/images/stickers/happy/thankyou.zip")
     }
 
     fun setStickerClickListener(stickerClickListener: StickerClickListener?) {
         this.stickerClickListener = stickerClickListener
-    }
-
-    private fun addAllStickers() {
-        stickerList.addAll(StickerDataReader.getAllStickers(activity))
     }
 
     private inner class DownloadFile : AsyncTask<String, String, String>() {
@@ -95,6 +139,7 @@ class StickerGalleryFragment : Fragment() {
          */
         override fun onPreExecute() {
             super.onPreExecute()
+            rcvSticker.visibility = View.GONE
             layoutDownload.visibility = View.VISIBLE
             progressBar.progress = 0
             tvDownloadPercentage.text = "0%"
@@ -171,7 +216,6 @@ class StickerGalleryFragment : Fragment() {
             tvDownloadStatus.text = String.format("%s%s", progress[0], "/100")
         }
 
-
         override fun onPostExecute(message: String) {
             // start unzip the downloaded file
             unzip(file!!, fileDirectory!!)
@@ -204,31 +248,31 @@ class StickerGalleryFragment : Fragment() {
             // delete downloaded zip file
             zipFile.delete()
 
-            layoutDownload.visibility = View.GONE
-            rcvSticker.visibility = View.VISIBLE
-
-            val stickerFiles = getAllImageFiles(targetDirectory)
+            val stickerFiles = imageReaderNew(File(targetDirectory, zipFile.nameWithoutExtension))
             if (stickerFiles.isNotEmpty()) {
                 val stickerList: ArrayList<String> = ArrayList()
                 for (file in stickerFiles) {
                     stickerList.add(Uri.fromFile(file).toString())
                 }
 
-                stickerAdapter!!.addItems(stickerList)
+                stickerAdapter!!.replaceItems(stickerList)
             }
+
+            layoutDownload.visibility = View.GONE
+            rcvSticker.visibility = View.VISIBLE
         }
     }
 
-    private fun getAllImageFiles(parentDir: File): List<File> {
-        val inFiles = ArrayList<File>()
-        val files = parentDir.listFiles()
-        for (file in files) {
-            if (file.isDirectory) {
-                inFiles.addAll(getAllImageFiles(file))
-            } else {
-                inFiles.add(file)
+    private fun imageReaderNew(root: File): List<File> {
+        val fileList: ArrayList<File> = ArrayList()
+        val listAllFiles = root.listFiles()
+
+        if (listAllFiles != null && listAllFiles.isNotEmpty()) {
+            for (currentFile in listAllFiles) {
+                fileList.add(currentFile.absoluteFile)
             }
         }
-        return inFiles
+
+        return fileList
     }
 }

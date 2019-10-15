@@ -81,6 +81,6 @@ class StickerOverlayFragment : Fragment() {
         stickerList.add("https://github.com/mnafian/ImageEffectFilter/blob/master/app/src/main/res/drawable/wall12box.png?raw=true")
         stickerList.add("https://github.com/mnafian/ImageEffectFilter/blob/master/app/src/main/res/drawable/wall12box.png?raw=true")*/
 
-        stickerList.addAll(StickerDataReader.getOverlays(activity))
+        stickerList.addAll(StickerDataReader.getOverlays())
     }
 }

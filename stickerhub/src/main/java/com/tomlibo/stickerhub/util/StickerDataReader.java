@@ -13,7 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StickerDataReader {
-    public static String jsonData;
+
+    private static String jsonData;
+    private static List<StickerInfo> stickerInfos = new ArrayList<>();
 
     private static void init(Context context) throws IOException {
         if (jsonData != null) return;
@@ -21,7 +23,10 @@ public class StickerDataReader {
         byte[] buff = new byte[inputStream.available()];
         inputStream.read(buff);
         jsonData = new String(buff);
-        buff = null;
+    }
+
+    public static void init(List<StickerInfo> stickerInfoList) {
+        stickerInfos = stickerInfoList;
     }
 
     private static List<StickerInfo> getStickerData(Context context) throws IOException {
@@ -30,9 +35,9 @@ public class StickerDataReader {
         }.getType());
     }
 
-    public static List<StickerInfo> getOnlyStickers(Context context) throws IOException {
+    public static List<StickerInfo> getOnlyStickers() {
         List<StickerInfo> stickerInfoList = new ArrayList<>();
-        for (StickerInfo stickerInfo : getStickerData(context)) {
+        for (StickerInfo stickerInfo : stickerInfos) {
             if (stickerInfo.getFormattedTitle().contains("frame")) continue;
             if (stickerInfo.getFormattedTitle().contains("overlay")) continue;
             stickerInfoList.add(stickerInfo);
@@ -40,8 +45,8 @@ public class StickerDataReader {
         return stickerInfoList;
     }
 
-    public static List<String> getStickersByCategory(Context context, String categoryTitle) throws IOException {
-        for (StickerInfo stickerInfo : getStickerData(context)) {
+    public static List<String> getStickersByCategory(String categoryTitle) {
+        for (StickerInfo stickerInfo : stickerInfos) {
             if (stickerInfo.getFormattedTitle().contains(categoryTitle)) {
                 return stickerInfo.getStickerUrlList();
             }
@@ -49,43 +54,43 @@ public class StickerDataReader {
         return new ArrayList<>();
     }
 
-    public static List<String> getAllCategoryThumbs(Context context) throws IOException {
+    public static List<String> getAllCategoryThumbs() {
         List<String> categoryImageList = new ArrayList<>();
-        for (StickerInfo info : getOnlyStickers(context)) {
+        for (StickerInfo info : getOnlyStickers()) {
             categoryImageList.add(info.getThumbUrl());
         }
         return categoryImageList;
     }
 
-    public static StickerInfo getStickerInfoByIndex(Context context, int index) throws IOException {
-        List<StickerInfo> allStickers = getOnlyStickers(context);
+    public static StickerInfo getStickerInfoByIndex(int index) {
+        List<StickerInfo> allStickers = getOnlyStickers();
         if (index < 0 || index >= allStickers.size()) {
             throw new IndexOutOfBoundsException("index outside range");
         }
         return allStickers.get(index);
     }
 
-    public static List<String> getStickersByIndex(Context context, int index) throws IOException {
-        List<StickerInfo> allStickers = getOnlyStickers(context);
+    public static List<String> getStickersByIndex(int index) {
+        List<StickerInfo> allStickers = getOnlyStickers();
         if (index < 0 || index >= allStickers.size()) {
             throw new IndexOutOfBoundsException("index outside range");
         }
         return allStickers.get(index).getStickerUrlList();
     }
 
-    public static List<String> getAllStickers(Context context) throws IOException {
+    public static List<String> getAllStickers() {
         List<String> stickerUrlList = new ArrayList<>();
-        for (StickerInfo stickerInfo : getOnlyStickers(context)) {
+        for (StickerInfo stickerInfo : getOnlyStickers()) {
             stickerUrlList.addAll(stickerInfo.getStickerUrlList());
         }
         return stickerUrlList;
     }
 
-    public static List<String> getFrames(Context context) throws IOException {
-        return getStickersByCategory(context, "frames");
+    public static List<String> getFrames() {
+        return getStickersByCategory("frames");
     }
 
-    public static List<String> getOverlays(Context context) throws IOException {
-        return getStickersByCategory(context, "overlays");
+    public static List<String> getOverlays() {
+        return getStickersByCategory("overlays");
     }
 }
