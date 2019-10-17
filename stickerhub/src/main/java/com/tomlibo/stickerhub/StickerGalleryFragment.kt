@@ -1,7 +1,6 @@
 package com.tomlibo.stickerhub
 
 import android.net.Uri
-import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -19,6 +18,10 @@ import com.tomlibo.stickerhub.util.Constants
 import com.tomlibo.stickerhub.util.RecyclerItemClickListener
 import com.tomlibo.stickerhub.util.StickerDataReader
 import kotlinx.android.synthetic.main.fragment_sticker_gallery.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.*
 import java.net.URL
 import java.util.zip.ZipEntry
@@ -32,6 +35,8 @@ class StickerGalleryFragment : Fragment() {
     private var stickerClickListener: StickerClickListener? = null
     private var categoryAdapter: StickerCategoryAdapter? = null
     private var stickerAdapter: StickerAdapter? = null
+    private var fileDirectory: File? = null
+    private var isLoading: Boolean = false
 
     companion object {
         private const val PARAM_STICKER_INFO = "PARAM_STICKER_INFO"
@@ -68,25 +73,15 @@ class StickerGalleryFragment : Fragment() {
         rcvCategory.adapter = categoryAdapter
 
         rcvCategory.addOnItemTouchListener(RecyclerItemClickListener(context, RecyclerItemClickListener.OnItemClickListener { v, position ->
-            categoryAdapter?.updateSelection(position)
-            val stickerInfo = categoryAdapter?.getItem(position)
-
-            val directory = File(activity!!.filesDir, "sticker/" + stickerInfo?.categoryTitle?.toLowerCase())
-            val contents = directory.listFiles()
-            if (contents == null || contents.isEmpty()) {
-                DownloadFile().execute(Constants.STICKER_BASE_URL + "/" + stickerInfo?.categoryTitle?.toLowerCase() + "/" + stickerInfo?.categoryTitle?.toLowerCase() + ".zip")
-            } else {
-                val stickerFiles = imageReaderNew(directory)
-                if (stickerFiles.isNotEmpty()) {
-                    val stickerList: ArrayList<String> = ArrayList()
-                    for (file in stickerFiles) {
-                        stickerList.add(Uri.fromFile(file).toString())
-                    }
-
-                    stickerAdapter!!.replaceItems(stickerList)
-
-                    layoutDownload.visibility = View.GONE
-                    rcvSticker.visibility = View.VISIBLE
+            if (!isLoading) {
+                categoryAdapter?.updateSelection(position)
+                val stickerInfo = categoryAdapter?.getItem(position)
+                if (!stickerInfo!!.isOnline) {
+                    val directoryPath = "sticker/" + stickerInfo.categoryTitle?.toLowerCase()
+                    val fileUrl = Constants.STICKER_BASE_URL + "/" + stickerInfo.categoryTitle?.toLowerCase() + "/" + stickerInfo.categoryTitle?.toLowerCase() + ".zip"
+                    showStickersByCategory(directoryPath, fileUrl)
+                } else {
+                    stickerAdapter!!.replaceItems(StickerDataReader.getStickersByIndexOnline(activity, position))
                 }
             }
         }))
@@ -96,10 +91,40 @@ class StickerGalleryFragment : Fragment() {
         rcvSticker.addItemDecoration(GridSpacingItemDecoration(3, 4, false))
         rcvSticker.adapter = stickerAdapter
 
-        val directory = File(activity!!.filesDir, "sticker/" + StickerDataReader.getStickerInfoByIndex(0)?.categoryTitle?.toLowerCase())
+        // show stickers from 1st index category
+        val stickerInfo = StickerDataReader.getStickerInfoByIndex(0)
+        if (!stickerInfo!!.isOnline) {
+            val directoryPath = "sticker/" + stickerInfo.categoryTitle?.toLowerCase()
+            val fileUrl = Constants.STICKER_BASE_URL + "/" + stickerInfo.categoryTitle?.toLowerCase() + "/" + stickerInfo.categoryTitle?.toLowerCase() + ".zip"
+            showStickersByCategory(directoryPath, fileUrl)
+        } else {
+            stickerAdapter!!.replaceItems(StickerDataReader.getStickersByIndexOnline(activity, 0))
+        }
+
+        rcvSticker.addOnItemTouchListener(RecyclerItemClickListener(context, RecyclerItemClickListener.OnItemClickListener { view, position ->
+            if (context is StickerClickListener) {
+                stickerClickListener = context as StickerClickListener
+            }
+            stickerClickListener?.onSelectedSticker(stickerAdapter?.getItem(position))
+        }))
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+    }
+
+    fun setStickerClickListener(stickerClickListener: StickerClickListener?) {
+        this.stickerClickListener = stickerClickListener
+    }
+
+    private fun showStickersByCategory(directoryPath: String, fileUrl: String) {
+        val directory = File(activity!!.filesDir, directoryPath)
         val contents = directory.listFiles()
         if (contents == null || contents.isEmpty()) {
-            DownloadFile().execute(Constants.STICKER_BASE_URL + "/" + StickerDataReader.getStickerInfoByIndex(0)?.categoryTitle?.toLowerCase() + "/" + StickerDataReader.getStickerInfoByIndex(0)?.categoryTitle?.toLowerCase() + ".zip")
+            GlobalScope.launch(Dispatchers.Main) {
+                val f = fetchStickerPack(fileUrl.replace(" ", ""))
+                showImages(f)
+            }
         } else {
             val stickerFiles = imageReaderNew(directory)
             if (stickerFiles.isNotEmpty()) {
@@ -114,31 +139,44 @@ class StickerGalleryFragment : Fragment() {
                 rcvSticker.visibility = View.VISIBLE
             }
         }
+    }
 
-        rcvSticker.addOnItemTouchListener(RecyclerItemClickListener(context, RecyclerItemClickListener.OnItemClickListener { view, position ->
-            if (context is StickerClickListener) {
-                stickerClickListener = context as StickerClickListener
+    private suspend fun fetchStickerPack(url: String): File {
+        isLoading = true
+
+        return withContext(Dispatchers.IO) {
+            // download zip file
+            val file = downloadZipFile(url)
+
+            // start unzip the downloaded file
+            unzip(file, fileDirectory!!)
+
+            isLoading = false
+
+            file
+        }
+    }
+
+    private fun showImages(file: File) {
+        val stickerFiles = imageReaderNew(File(fileDirectory!!, file.nameWithoutExtension))
+        if (stickerFiles.isNotEmpty()) {
+            val stickerList: ArrayList<String> = ArrayList()
+            for (f in stickerFiles) {
+                stickerList.add(Uri.fromFile(f).toString())
             }
-            stickerClickListener?.onSelectedSticker(stickerAdapter?.getItem(position))
-        }))
+
+            stickerAdapter!!.replaceItems(stickerList)
+        }
+
+        layoutDownload.visibility = View.GONE
+        rcvSticker.visibility = View.VISIBLE
     }
 
-    fun setStickerClickListener(stickerClickListener: StickerClickListener?) {
-        this.stickerClickListener = stickerClickListener
-    }
-
-    private inner class DownloadFile : AsyncTask<String, String, String>() {
-
-        private var fileDirectory: File? = null
-        private var fileName: String? = null
-        private var file: File? = null
-
+    private suspend fun downloadZipFile(fileUrl: String): File {
         /**
-         * Before starting background thread
-         * Show Progress Bar Dialog
+         * UI visibility control
          */
-        override fun onPreExecute() {
-            super.onPreExecute()
+        withContext(Dispatchers.Main) {
             rcvSticker.visibility = View.GONE
             layoutDownload.visibility = View.VISIBLE
             progressBar.progress = 0
@@ -146,80 +184,64 @@ class StickerGalleryFragment : Fragment() {
             tvDownloadStatus.text = "0/100"
         }
 
-        /**
-         * Downloading file in background thread
-         */
-        override fun doInBackground(vararg f_url: String): String {
-            try {
-                val url = URL(f_url[0])
-                val connection = url.openConnection()
-                connection.connect()
+        val fileName: String
+        var file: File? = null
 
-                // getting file length
-                val lengthOfFile = connection.contentLength
+        try {
+            val url = URL(fileUrl)
+            val connection = url.openConnection()
+            connection.connect()
 
-                // input stream to read file - with 8k buffer
-                val inputStream = BufferedInputStream(url.openStream(), 8192)
+            // getting file length
+            val lengthOfFile = connection.contentLength
 
-                //Extract file name from URL
-                fileName = f_url[0].substring(f_url[0].lastIndexOf('/') + 1, f_url[0].length)
+            // input stream to read file - with 8k buffer
+            val inputStream = BufferedInputStream(url.openStream(), 8192)
 
-                /*
-                * Store file in internal storage
-                * */
-                fileDirectory = File(activity!!.filesDir, "sticker")
-                if (!fileDirectory!!.exists() && !fileDirectory!!.isDirectory) {
-                    fileDirectory!!.mkdirs()
-                }
+            //Extract file name from URL
+            fileName = fileUrl.substring(fileUrl.lastIndexOf('/') + 1, fileUrl.length)
 
-                file = File(fileDirectory, fileName)
-
-                val outputStream = FileOutputStream(file)
-
-                val buffer = ByteArray(1024)
-                var dataSize = 0
-                var loadedSize: Long = 0
-
-                while ({ dataSize = inputStream.read(buffer); dataSize }() != -1) {
-                    loadedSize += dataSize
-
-                    // publishing the progress....
-                    // After this onProgressUpdate will be called
-                    publishProgress("" + ((loadedSize * 100) / lengthOfFile).toInt())
-                    //Log.d(TAG, "Progress: " + ((loadedSize * 100) / lengthOfFile).toInt())
-
-                    outputStream.write(buffer, 0, dataSize)
-                }
-
-                // flushing output
-                outputStream.flush()
-
-                // closing streams
-                outputStream.close()
-                inputStream.close()
-
-                return "Downloaded at: $file"
-            } catch (e: Exception) {
-                Log.e("Error: ", e.message)
+            /*
+            * Store file in internal storage
+            * */
+            fileDirectory = File(activity!!.filesDir, "sticker")
+            if (!fileDirectory!!.exists() && !fileDirectory!!.isDirectory) {
+                fileDirectory!!.mkdirs()
             }
 
-            return "Something went wrong"
+            file = File(fileDirectory, fileName)
+
+            val outputStream = FileOutputStream(file)
+
+            val buffer = ByteArray(1024)
+            var dataSize = 0
+            var loadedSize: Long = 0
+
+            while ({ dataSize = inputStream.read(buffer); dataSize }() != -1) {
+                loadedSize += dataSize
+
+                // setting progress percentage
+                withContext(Dispatchers.Main) {
+                    val progress = ((loadedSize * 100) / lengthOfFile).toInt().toString()
+                    progressBar.progress = Integer.parseInt(progress)
+                    tvDownloadPercentage.text = String.format("%s%s", progress, "%")
+                    tvDownloadStatus.text = String.format("%s%s", progress, "/100")
+                }
+
+                outputStream.write(buffer, 0, dataSize)
+            }
+
+            // flushing output
+            outputStream.flush()
+
+            // closing streams
+            outputStream.close()
+            inputStream.close()
+        } catch (e: Exception) {
+            Log.e("Error: ", e.message)
         }
 
-        /**
-         * Updating progress bar
-         */
-        override fun onProgressUpdate(vararg progress: String) {
-            // setting progress percentage
-            progressBar.progress = Integer.parseInt(progress[0])
-            tvDownloadPercentage.text = String.format("%s%s", progress[0], "%")
-            tvDownloadStatus.text = String.format("%s%s", progress[0], "/100")
-        }
-
-        override fun onPostExecute(message: String) {
-            // start unzip the downloaded file
-            unzip(file!!, fileDirectory!!)
-        }
+        return file!!
     }
 
     @Throws(IOException::class)
@@ -247,19 +269,6 @@ class StickerGalleryFragment : Fragment() {
 
             // delete downloaded zip file
             zipFile.delete()
-
-            val stickerFiles = imageReaderNew(File(targetDirectory, zipFile.nameWithoutExtension))
-            if (stickerFiles.isNotEmpty()) {
-                val stickerList: ArrayList<String> = ArrayList()
-                for (file in stickerFiles) {
-                    stickerList.add(Uri.fromFile(file).toString())
-                }
-
-                stickerAdapter!!.replaceItems(stickerList)
-            }
-
-            layoutDownload.visibility = View.GONE
-            rcvSticker.visibility = View.VISIBLE
         }
     }
 

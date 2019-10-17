@@ -16,12 +16,14 @@ public class StickerInfo implements Parcelable {
     private int end;
     @SerializedName("name")
     private String categoryTitle;
+    private boolean online;
 
     protected StickerInfo(Parcel in) {
         selected = in.readByte() != 0;
         start = in.readInt();
         end = in.readInt();
         categoryTitle = in.readString();
+        online = in.readByte() != 0;
     }
 
     public static final Creator<StickerInfo> CREATOR = new Creator<StickerInfo>() {
@@ -84,6 +86,14 @@ public class StickerInfo implements Parcelable {
         this.categoryTitle = categoryTitle;
     }
 
+    public boolean isOnline() {
+        return online;
+    }
+
+    public void setOnline(boolean online) {
+        this.online = online;
+    }
+
     public String getFormattedTitle() {
         return categoryTitle.replaceAll(" ", "-").toLowerCase();
     }
@@ -99,5 +109,6 @@ public class StickerInfo implements Parcelable {
         dest.writeInt(start);
         dest.writeInt(end);
         dest.writeString(categoryTitle);
+        dest.writeByte((byte) (online ? 1 : 0));
     }
 }
