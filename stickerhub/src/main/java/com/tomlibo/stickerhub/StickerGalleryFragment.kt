@@ -77,8 +77,8 @@ class StickerGalleryFragment : Fragment() {
                 categoryAdapter?.updateSelection(position)
                 val stickerInfo = categoryAdapter?.getItem(position)
                 if (!stickerInfo!!.isOnline) {
-                    val directoryPath = "sticker/" + stickerInfo.categoryTitle?.toLowerCase()
-                    val fileUrl = Constants.STICKER_BASE_URL + "/" + stickerInfo.categoryTitle?.toLowerCase() + "/" + stickerInfo.categoryTitle?.toLowerCase() + ".zip"
+                    val directoryPath = "sticker/" + stickerInfo.formattedTitle
+                    val fileUrl = Constants.STICKER_BASE_URL + "/" + stickerInfo.formattedTitle + "/" + stickerInfo.formattedTitle + ".zip"
                     showStickersByCategory(directoryPath, fileUrl)
                 } else {
                     stickerAdapter!!.replaceItems(StickerDataReader.getStickersByIndexOnline(activity, position))
@@ -94,8 +94,8 @@ class StickerGalleryFragment : Fragment() {
         // show stickers from 1st index category
         val stickerInfo = StickerDataReader.getStickerInfoByIndex(0)
         if (!stickerInfo!!.isOnline) {
-            val directoryPath = "sticker/" + stickerInfo.categoryTitle?.toLowerCase()
-            val fileUrl = Constants.STICKER_BASE_URL + "/" + stickerInfo.categoryTitle?.toLowerCase() + "/" + stickerInfo.categoryTitle?.toLowerCase() + ".zip"
+            val directoryPath = "sticker/" + stickerInfo.formattedTitle
+            val fileUrl = Constants.STICKER_BASE_URL + "/" + stickerInfo.formattedTitle + "/" + stickerInfo.formattedTitle + ".zip"
             showStickersByCategory(directoryPath, fileUrl)
         } else {
             stickerAdapter!!.replaceItems(StickerDataReader.getStickersByIndexOnline(activity, 0))

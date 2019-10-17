@@ -52,12 +52,6 @@ class StickerFrameFragment : Fragment() {
     }
 
     private fun addFrames() {
-        /*stickerList.add("https://github.com/iQueSoft/iQuePhoto/blob/master/iQuePhoto/app/src/main/res/drawable-nodpi/frame_grunge_01.png?raw=true")
-        stickerList.add("https://github.com/iQueSoft/iQuePhoto/blob/master/iQuePhoto/app/src/main/res/drawable-nodpi/frame_grunge_02.png?raw=true")
-        stickerList.add("https://github.com/iQueSoft/iQuePhoto/blob/master/iQuePhoto/app/src/main/res/drawable-nodpi/frame_grunge_03.png?raw=true")
-        stickerList.add("https://github.com/iQueSoft/iQuePhoto/blob/master/iQuePhoto/app/src/main/res/drawable-nodpi/frame_grunge_04.png?raw=true")
-        stickerList.add("https://github.com/iQueSoft/iQuePhoto/blob/master/iQuePhoto/app/src/main/res/drawable-nodpi/frame_h_01.png?raw=true")
-        stickerList.add("http://img.tomlibo.com/app/stiker/frame/frame.9.png")*/
         stickerList.addAll(StickerDataReader.getFrames(context))
     }
 }
