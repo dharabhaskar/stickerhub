@@ -45,16 +45,6 @@ public class StickerDataReader {
         return stickerInfoList;
     }
 
-    public static List<StickerInfo> getOnlyStickersOnline(Context context) throws IOException {
-        List<StickerInfo> stickerInfoList = new ArrayList<>();
-        for (StickerInfo stickerInfo : getStickerData(context)) {
-            if (stickerInfo.getFormattedTitle().contains("frame")) continue;
-            if (stickerInfo.getFormattedTitle().contains("overlay")) continue;
-            stickerInfoList.add(stickerInfo);
-        }
-        return stickerInfoList;
-    }
-
     public static List<String> getStickersByCategory(Context context, String categoryTitle) throws IOException {
         for (StickerInfo stickerInfo : getStickerData(context)) {
             if (stickerInfo.getFormattedTitle().contains(categoryTitle)) {
@@ -82,14 +72,6 @@ public class StickerDataReader {
 
     public static List<String> getStickersByIndex(int index) {
         List<StickerInfo> allStickers = getOnlyStickers();
-        if (index < 0 || index >= allStickers.size()) {
-            throw new IndexOutOfBoundsException("index outside range");
-        }
-        return allStickers.get(index).getStickerUrlList();
-    }
-
-    public static List<String> getStickersByIndexOnline(Context context, int index) throws IOException {
-        List<StickerInfo> allStickers = getOnlyStickersOnline(context);
         if (index < 0 || index >= allStickers.size()) {
             throw new IndexOutOfBoundsException("index outside range");
         }

@@ -81,7 +81,7 @@ class StickerGalleryFragment : Fragment() {
                     val fileUrl = Constants.STICKER_BASE_URL + "/" + stickerInfo.formattedTitle + "/" + stickerInfo.formattedTitle + ".zip"
                     showStickersByCategory(directoryPath, fileUrl)
                 } else {
-                    stickerAdapter!!.replaceItems(StickerDataReader.getStickersByIndexOnline(activity, position))
+                    stickerAdapter!!.replaceItems(StickerDataReader.getStickersByIndex(position))
                 }
             }
         }))
@@ -98,7 +98,7 @@ class StickerGalleryFragment : Fragment() {
             val fileUrl = Constants.STICKER_BASE_URL + "/" + stickerInfo.formattedTitle + "/" + stickerInfo.formattedTitle + ".zip"
             showStickersByCategory(directoryPath, fileUrl)
         } else {
-            stickerAdapter!!.replaceItems(StickerDataReader.getStickersByIndexOnline(activity, 0))
+            stickerAdapter!!.replaceItems(StickerDataReader.getStickersByIndex(0))
         }
 
         rcvSticker.addOnItemTouchListener(RecyclerItemClickListener(context, RecyclerItemClickListener.OnItemClickListener { view, position ->
