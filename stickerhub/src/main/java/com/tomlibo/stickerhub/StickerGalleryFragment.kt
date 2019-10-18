@@ -82,6 +82,10 @@ class StickerGalleryFragment : Fragment() {
                     showStickersByCategory(directoryPath, fileUrl)
                 } else {
                     stickerAdapter!!.replaceItems(StickerDataReader.getStickersByIndex(position))
+
+                    btDownload.visibility = View.GONE
+                    layoutDownload.visibility = View.GONE
+                    rcvSticker.visibility = View.VISIBLE
                 }
             }
         }))
@@ -99,6 +103,10 @@ class StickerGalleryFragment : Fragment() {
             showStickersByCategory(directoryPath, fileUrl)
         } else {
             stickerAdapter!!.replaceItems(StickerDataReader.getStickersByIndex(0))
+
+            btDownload.visibility = View.GONE
+            layoutDownload.visibility = View.GONE
+            rcvSticker.visibility = View.VISIBLE
         }
 
         rcvSticker.addOnItemTouchListener(RecyclerItemClickListener(context, RecyclerItemClickListener.OnItemClickListener { view, position ->
@@ -163,6 +171,7 @@ class StickerGalleryFragment : Fragment() {
             stickerAdapter!!.replaceItems(stickerList)
         }
 
+        btDownload.visibility = View.GONE
         layoutDownload.visibility = View.GONE
         rcvSticker.visibility = View.VISIBLE
     }
