@@ -121,23 +121,19 @@ class StickerGalleryFragment : Fragment() {
         val directory = File(activity!!.filesDir, directoryPath)
         val contents = directory.listFiles()
         if (contents == null || contents.isEmpty()) {
-            GlobalScope.launch(Dispatchers.Main) {
-                val f = fetchStickerPack(fileUrl.replace(" ", ""))
-                showImages(f)
+            btDownload.visibility = View.VISIBLE
+            rcvSticker.visibility = View.GONE
+
+            btDownload.setOnClickListener {
+                btDownload.visibility = View.GONE
+
+                GlobalScope.launch(Dispatchers.Main) {
+                    val f = fetchStickerPack(fileUrl)
+                    showImages(imageReaderNew(File(fileDirectory!!, f.nameWithoutExtension)))
+                }
             }
         } else {
-            val stickerFiles = imageReaderNew(directory)
-            if (stickerFiles.isNotEmpty()) {
-                val stickerList: ArrayList<String> = ArrayList()
-                for (file in stickerFiles) {
-                    stickerList.add(Uri.fromFile(file).toString())
-                }
-
-                stickerAdapter!!.replaceItems(stickerList)
-
-                layoutDownload.visibility = View.GONE
-                rcvSticker.visibility = View.VISIBLE
-            }
+            showImages(imageReaderNew(directory))
         }
     }
 
@@ -157,8 +153,7 @@ class StickerGalleryFragment : Fragment() {
         }
     }
 
-    private fun showImages(file: File) {
-        val stickerFiles = imageReaderNew(File(fileDirectory!!, file.nameWithoutExtension))
+    private fun showImages(stickerFiles: List<File>) {
         if (stickerFiles.isNotEmpty()) {
             val stickerList: ArrayList<String> = ArrayList()
             for (f in stickerFiles) {
