@@ -31,7 +31,7 @@ class StickerGalleryBottomSheet : BottomSheetDialogFragment() {
 
         tvTitle.text = resources.getString(R.string.sticker_header)
 
-        ReadStickerJsonFile().execute(Constants.STICKER_BASE_URL + "/sticker-info.json")
+        ReadStickerJsonFile().execute(Constants.STICKER_BASE_URL + "/sticker-data.json")
     }
 
     fun setStickerClickListener(stickerClickListener: StickerClickListener) {

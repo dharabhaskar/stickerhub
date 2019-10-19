@@ -75,18 +75,9 @@ class StickerGalleryFragment : Fragment() {
         rcvCategory.addOnItemTouchListener(RecyclerItemClickListener(context, RecyclerItemClickListener.OnItemClickListener { v, position ->
             if (!isLoading) {
                 categoryAdapter?.updateSelection(position)
-                val stickerInfo = categoryAdapter?.getItem(position)
-                if (!stickerInfo!!.isOnline) {
-                    val directoryPath = "sticker/" + stickerInfo.formattedTitle
-                    val fileUrl = Constants.STICKER_BASE_URL + "/" + stickerInfo.formattedTitle + "/" + stickerInfo.formattedTitle + ".zip"
-                    showStickersByCategory(directoryPath, fileUrl)
-                } else {
-                    stickerAdapter!!.replaceItems(StickerDataReader.getStickersByIndex(position))
 
-                    btDownload.visibility = View.GONE
-                    layoutDownload.visibility = View.GONE
-                    rcvSticker.visibility = View.VISIBLE
-                }
+                // show stickers from current index category
+                showStickersByCategory(position)
             }
         }))
 
@@ -96,18 +87,7 @@ class StickerGalleryFragment : Fragment() {
         rcvSticker.adapter = stickerAdapter
 
         // show stickers from 1st index category
-        val stickerInfo = StickerDataReader.getStickerInfoByIndex(0)
-        if (!stickerInfo!!.isOnline) {
-            val directoryPath = "sticker/" + stickerInfo.formattedTitle
-            val fileUrl = Constants.STICKER_BASE_URL + "/" + stickerInfo.formattedTitle + "/" + stickerInfo.formattedTitle + ".zip"
-            showStickersByCategory(directoryPath, fileUrl)
-        } else {
-            stickerAdapter!!.replaceItems(StickerDataReader.getStickersByIndex(0))
-
-            btDownload.visibility = View.GONE
-            layoutDownload.visibility = View.GONE
-            rcvSticker.visibility = View.VISIBLE
-        }
+        showStickersByCategory(0)
 
         rcvSticker.addOnItemTouchListener(RecyclerItemClickListener(context, RecyclerItemClickListener.OnItemClickListener { view, position ->
             if (context is StickerClickListener) {
@@ -125,15 +105,19 @@ class StickerGalleryFragment : Fragment() {
         this.stickerClickListener = stickerClickListener
     }
 
-    private fun showStickersByCategory(directoryPath: String, fileUrl: String) {
-        val directory = File(activity!!.filesDir, directoryPath)
+    private fun showStickersByCategory(categoryPosition: Int) {
+        val stickerInfo = StickerDataReader.getStickerInfoByIndex(categoryPosition)
+        val fileUrl = Constants.STICKER_BASE_URL + "/" + stickerInfo.formattedTitle + "/" + stickerInfo.formattedTitle + ".zip"
+        val directory = File(activity!!.filesDir, "sticker/" + stickerInfo.formattedTitle)
         val contents = directory.listFiles()
+
         if (contents == null || contents.isEmpty()) {
-            btDownload.visibility = View.VISIBLE
-            rcvSticker.visibility = View.GONE
+            stickerAdapter!!.replaceItems(StickerDataReader.getStickersByIndex(categoryPosition))
+
+            layoutMoreStickers.visibility = View.VISIBLE
 
             btDownload.setOnClickListener {
-                btDownload.visibility = View.GONE
+                layoutMoreStickers.visibility = View.GONE
 
                 GlobalScope.launch(Dispatchers.Main) {
                     val f = fetchStickerPack(fileUrl)
@@ -171,7 +155,7 @@ class StickerGalleryFragment : Fragment() {
             stickerAdapter!!.replaceItems(stickerList)
         }
 
-        btDownload.visibility = View.GONE
+        layoutMoreStickers.visibility = View.GONE
         layoutDownload.visibility = View.GONE
         rcvSticker.visibility = View.VISIBLE
     }

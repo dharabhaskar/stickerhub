@@ -26,20 +26,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btDownload"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="32dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="32dp"
-                    android:backgroundTint="@color/soft_green"
-                    android:text="Download"
-                    android:textColor="@color/white"
-                    android:visibility="gone" />
-
                 <LinearLayout
                     android:id="@+id/layoutDownload"
                     android:layout_width="match_parent"
@@ -91,6 +77,35 @@
                 </LinearLayout>
 
             </FrameLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutMoreStickers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:visibility="gone">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="More stickers are available"
+                    android:textColor="@color/grey_shadow"
+                    android:textSize="16sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btDownload"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:backgroundTint="@color/soft_green"
+                    android:text="Download"
+                    android:textColor="@color/white"
+                    android:visibility="visible" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
