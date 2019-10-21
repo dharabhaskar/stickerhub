@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity(), StickerClickListener, FrameClickListen
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onSelectedSticker(url: String?) {
+    override fun onSelectedSticker(url: String?, onlineUrl: String?) {
         stickerGalleryBottomSheet.dismiss()
 
         Glide.with(this)

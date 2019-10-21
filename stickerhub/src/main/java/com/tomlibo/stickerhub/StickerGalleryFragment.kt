@@ -26,6 +26,9 @@ import java.io.*
 import java.net.URL
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
+import android.R.attr.path
+
+
 
 class StickerGalleryFragment : Fragment() {
 
@@ -93,7 +96,7 @@ class StickerGalleryFragment : Fragment() {
             if (context is StickerClickListener) {
                 stickerClickListener = context as StickerClickListener
             }
-            stickerClickListener?.onSelectedSticker(stickerAdapter?.getItem(position))
+            stickerClickListener?.onSelectedSticker(stickerAdapter?.getItem(position), getStickerOnlineUrl(stickerAdapter?.getItem(position)!!))
         }))
     }
 
@@ -271,5 +274,16 @@ class StickerGalleryFragment : Fragment() {
         }
 
         return fileList
+    }
+
+    private fun getStickerOnlineUrl(path: String): String {
+        return if (path.startsWith("https")) {
+            path
+        } else  {
+            val file = File(path)
+            val strFileName = file.name
+            val strFolderName = file.parentFile.name
+            Constants.STICKER_BASE_URL + "/" + strFolderName + "/" + strFileName
+        }
     }
 }
